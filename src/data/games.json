@@ -1,0 +1,842 @@
+[
+  {
+    "id": 1,
+    "title": "Stellar Epoch",
+    "titleZh": "星痕紀元",
+    "cover": "/games/stellar-epoch-cover.jpg",
+    "banner": "/games/stellar-epoch-banner.jpg",
+    "genre": ["RPG", "Action", "Sci-Fi"],
+    "price": 1490,
+    "rating": 4.8,
+    "releaseDate": "2026-03-15",
+    "developer": "Nova Forge Studio",
+    "publisher": "Nova Forge",
+    "description": "一名失去記憶的星際傭兵，在戰火蔓延的殖民星系中追尋自己的過去，卻逐漸發現自己曾是改變銀河命運的關鍵人物。",
+    "detailDescription": "人類跨越太陽系後，在數百個星球建立了彼此獨立的殖民地。然而，資源爭奪與政治衝突讓各大勢力之間的和平早已名存實亡。玩家將扮演一名在戰場上失去記憶的星際傭兵，駕駛著一艘老舊的戰鬥艦，在不同殖民星球之間接受委託、探索遺跡並調查與自己過去有關的神秘線索。隨著冒險深入，玩家會逐漸發現自己曾經參與一項足以改變整個銀河系的秘密計畫，而那場計畫正是如今星際戰爭爆發的真正原因。遊戲結合第三人稱即時戰鬥、星際探索、角色成長與劇情選擇，玩家可以自由決定與不同勢力合作或對抗，部分選擇也會影響角色關係、任務發展以及最終結局。隨著記憶逐步恢復，你必須在尋找真正自我的同時，決定這場持續數十年的戰爭究竟應該如何結束。",
+    "tags": [
+      "Open World",
+      "Story Rich",
+      "Space Exploration",
+      "Character Customization",
+      "Multiple Endings"
+    ],
+    "screenshots": [
+      "/games/stellar-epoch-01.jpg",
+      "/games/stellar-epoch-02.jpg",
+      "/games/stellar-epoch-03.jpg"
+    ],
+    "status": ["featured"]
+  },
+  {
+    "id": 2,
+    "title": "Abyss Hunter",
+    "titleZh": "深淵獵人",
+    "cover": "/games/abyss-hunter-cover.jpg",
+    "banner": "/games/abyss-hunter-banner.jpg",
+    "genre": ["Action", "Adventure", "Roguelike"],
+    "price": 990,
+    "rating": 4.7,
+    "releaseDate": "2025-11-08",
+    "developer": "Black Lantern Games",
+    "publisher": "Black Lantern",
+    "description": "深入每次都會改變的地下遺跡，利用隨機能力、有限資源與臨場策略突破層層深淵，尋找埋藏在最底層的古老秘密。",
+    "detailDescription": "在大陸最北方的荒原之下，存在一座沒有人知道究竟有多深的巨大遺跡。數百年來，無數探險者曾試圖進入其中，卻幾乎沒有人活著回來。玩家將扮演一名專門探索禁忌遺跡的深淵獵人，帶著有限的裝備與補給踏入這座不斷變化的地下迷宮。每次進入深淵時，房間配置、敵人、陷阱與寶藏都會重新生成，因此沒有任何一次探索會完全相同。玩家必須在探索、戰鬥與資源管理之間做出選擇，決定究竟要繼續深入，還是帶著目前獲得的戰利品撤離。冒險過程中可以取得不同武器、技能與特殊能力，並組合出截然不同的戰鬥方式。即使死亡，也會保留部分永久成長能力，讓下一次挑戰能夠走得更遠。隨著探索深度增加，玩家將逐漸發現這座遺跡並非單純的古代迷宮，而是一個曾經封印某種未知存在的巨大牢籠。",
+    "tags": [
+      "Procedural Generation",
+      "Randomized Runs",
+      "Dungeon Crawling",
+      "Boss Battles",
+      "Character Progression"
+    ],
+    "screenshots": [
+      "/games/abyss-hunter-01.jpg",
+      "/games/abyss-hunter-02.jpg",
+      "/games/abyss-hunter-03.jpg"
+    ],
+    "status": ["bestseller"]
+  },
+  {
+    "id": 3,
+    "title": "Iron Throne",
+    "titleZh": "鋼鐵王座",
+    "cover": "/games/iron-throne-cover.jpg",
+    "banner": "/games/iron-throne-banner.jpg",
+    "genre": ["Strategy", "Simulation", "War"],
+    "price": 1290,
+    "rating": 4.6,
+    "releaseDate": "2026-01-22",
+    "developer": "Crownforge Interactive",
+    "publisher": "Crownforge",
+    "description": "成為新興王國的統治者，管理城市、經濟、軍隊與外交，在戰爭與政治之間做出抉擇，建立屬於自己的帝國。",
+    "detailDescription": "在一片長年分裂的古老大陸上，舊王朝已經崩潰，各地領主與軍閥爭奪著失去秩序的土地。玩家將成為一個新興王國的統治者，從一座規模有限的城鎮開始，逐步建立屬於自己的國家。你需要規劃城市建設、管理糧食與礦產等資源、制定稅收政策，並建立一支足以保護領土的軍隊。同時，周圍的國家並不會永遠保持和平，你可以透過外交、貿易與聯盟維持關係，也可以選擇發動戰爭擴張領土。每一項決策都可能改變王國未來的發展，例如過高的稅率可能增加國庫收入，卻也可能引發人民的不滿；過度擴張軍隊則可能削弱經濟，使國家陷入財政危機。戰爭並非唯一的勝利方式，你也可以透過經濟優勢、外交聯盟或文化發展建立強大的國家。隨著王國逐漸壯大，你將面對其他統治者的野心、內部政治鬥爭與日益複雜的國際局勢，而最終能否坐穩鋼鐵王座，完全取決於你的決策。",
+    "tags": [
+      "City Building",
+      "Resource Management",
+      "Diplomacy",
+      "Tactical Combat",
+      "World Building"
+    ],
+    "screenshots": [
+      "/games/iron-throne-01.jpg",
+      "/games/iron-throne-02.jpg",
+      "/games/iron-throne-03.jpg"
+    ],
+    "status": ["featured"]
+  },
+  {
+    "id": 4,
+    "title": "City of Rain",
+    "titleZh": "雨夜之城",
+    "cover": "/games/city-of-rain-cover.jpg",
+    "banner": "/games/city-of-rain-banner.jpg",
+    "genre": ["Adventure", "Mystery", "Visual Novel"],
+    "price": 890,
+    "rating": 4.9,
+    "releaseDate": "2026-04-18",
+    "developer": "Midnight Harbor Studio",
+    "publisher": "Midnight Harbor",
+    "description": "在一座永遠下著雨的城市裡，追查接連發生的失蹤案件，從散落的線索與謊言之中揭開城市不願面對的真相。",
+    "detailDescription": "灰燼城是一座從未真正見過晴天的城市。大雨已經持續數十年，人們早已習慣在潮濕與霧氣中生活，而城市的高牆則將外界與這個神秘地方徹底隔絕。玩家將扮演一名剛接手私人偵探事務所的調查員，原本只是接受一樁普通的失蹤案件，卻很快發現案件與數年前一場被官方封存的重大事故有關。玩家需要走遍城市不同區域，調查犯罪現場、搜尋文件、詢問居民，並從看似毫無關聯的證詞中找出矛盾。遊戲沒有傳統的戰鬥系統，真正的挑戰在於如何判斷哪些線索可信，以及是否願意相信那些可能隱藏秘密的人。隨著調查逐漸深入，你會發現失蹤人口並不是偶然消失，而有人正在城市暗處刻意操控一切。玩家的調查方向與關鍵決定會影響不同角色的命運，也可能讓你得到完全不同的真相。當最後一場雨落下時，你必須決定究竟要揭露這座城市的秘密，還是讓它永遠埋藏在雨幕之中。",
+    "tags": [
+      "Story Rich",
+      "Detective",
+      "Choice Driven",
+      "Atmospheric",
+      "Multiple Endings"
+    ],
+    "screenshots": [
+      "/games/city-of-rain-01.jpg",
+      "/games/city-of-rain-02.jpg",
+      "/games/city-of-rain-03.jpg"
+    ],
+    "status": []
+  },
+  {
+    "id": 5,
+    "title": "Pixel Farm Story",
+    "titleZh": "像素農場物語",
+    "cover": "/games/pixel-farm-story-cover.jpg",
+    "banner": "/games/pixel-farm-story-banner.jpg",
+    "genre": ["Simulation", "Casual", "Indie"],
+    "price": 590,
+    "rating": 4.8,
+    "releaseDate": "2026-05-02",
+    "developer": "Sunflower Pixel Studio",
+    "publisher": "Sunflower Pixel",
+    "description": "繼承祖父留下的小型農場，從種植作物與飼養動物開始，在四季更迭中擴建家園並與村民建立屬於自己的生活故事。",
+    "detailDescription": "玩家意外繼承了祖父留在晴川村的一座老舊農場，決定離開城市，回到這個曾經只在童年記憶中出現的地方重新開始生活。農場最初只有一間小屋、幾塊荒地與幾隻動物，你需要親手整理土地、播種作物、照顧牲畜，並將收穫的產品帶到村莊販售。隨著農場逐漸發展，可以建造新的設施、解鎖更多作物與動物，甚至改造自己的房屋與農場環境。除了農業之外，晴川村還有許多個性截然不同的居民，每個人都有自己的生活與故事。玩家可以透過日常互動、完成委託與參加季節活動逐漸與村民建立關係。春夏秋冬會帶來不同的作物、活動與景色，而你的生活方式也不需要被固定目標限制。你可以專注經營農場、探索附近森林、釣魚、收集材料，也可以花更多時間認識村民。隨著時間推進，你將逐漸理解祖父當年為什麼選擇留在這座村莊，並在這片土地上寫下屬於自己的全新故事。",
+    "tags": [
+      "Farming",
+      "Fishing",
+      "Crafting",
+      "Relationship System",
+      "World Building"
+    ],
+    "screenshots": [
+      "/games/pixel-farm-story-01.jpg",
+      "/games/pixel-farm-story-02.jpg",
+      "/games/pixel-farm-story-03.jpg"
+    ],
+    "status": []
+  },
+  {
+    "id": 6,
+    "title": "Neon Circuit",
+    "titleZh": "霓虹賽道",
+    "cover": "/games/neon-circuit-cover.jpg",
+    "banner": "/games/neon-circuit-banner.jpg",
+    "genre": ["Racing", "Action", "Indie"],
+    "price": 790,
+    "rating": 4.6,
+    "releaseDate": "2025-12-12",
+    "developer": "Velocity Core Studio",
+    "publisher": "Velocity Core",
+    "description": "穿梭於霓虹燈籠罩的未來都市，在高速競速與街頭賽事中挑戰頂尖車手，打造屬於自己的夢幻賽車。",
+    "detailDescription": "在一座由巨型高架道路與霓虹廣告組成的未來都市中，地下競速已經成為年輕車手追逐名聲與財富的主要方式。玩家將扮演一名剛加入地下賽車圈的新手車手，從一輛性能普通的老舊車輛開始，逐步挑戰不同街區的賽事。每場比賽除了考驗玩家的駕駛技術，也需要根據賽道環境選擇適合的車輛與改裝方向。玩家可以更換引擎、輪胎、懸吊與車體零件，調整車輛性能，打造符合自己駕駛風格的專屬賽車。隨著排名提升，你將遇到更多強大的競爭對手，以及只在深夜出現的特殊地下賽事。部分比賽還會加入高速追逐、城市捷徑與特殊天候等變化，使每場競速都有不同的挑戰。除了單純追求最快速度之外，你也可以透過完成特殊挑戰與收集賽車零件逐漸擴充自己的車庫。最終，你必須擊敗城市中最具傳奇色彩的車手，成為霓虹都市真正的街頭冠軍。",
+    "tags": [
+      "Vehicle Customization",
+      "Time Attack",
+      "Competitive",
+      "Exploration",
+      "Character Progression"
+    ],
+    "screenshots": [
+      "/games/neon-circuit-01.jpg",
+      "/games/neon-circuit-02.jpg",
+      "/games/neon-circuit-03.jpg"
+    ],
+    "status": ["bestseller", "featured"]
+  },
+  {
+    "id": 7,
+    "title": "Hollow Winter",
+    "titleZh": "寂冬",
+    "cover": "/games/hollow-winter-cover.jpg",
+    "banner": "/games/hollow-winter-banner.jpg",
+    "genre": ["Horror", "Survival", "Adventure"],
+    "price": 1090,
+    "rating": 4.7,
+    "releaseDate": "2026-06-19",
+    "developer": "Frostveil Studio",
+    "publisher": "Frostveil",
+    "description": "在永不停歇的暴風雪中探索被遺棄的小鎮，尋找失蹤的居民與生存資源，並揭開極寒之地隱藏多年的恐怖真相。",
+    "detailDescription": "一場毫無預警的極端暴風雪讓北方的小鎮與外界完全失去聯繫。數週後，救援隊終於抵達，卻發現整座小鎮已經沒有任何居民，只有被厚重積雪掩埋的街道與仍然運作的發電設施。玩家將扮演一名參與搜救任務的調查員，進入這座被遺棄的小鎮尋找失蹤居民的下落。暴風雪會持續降低能見度與體溫，玩家必須在探索建築、尋找食物與燃料，以及調查現場留下的線索之間做出取捨。小鎮中的資源十分有限，部分區域只有在取得特殊裝備後才能進入，而夜晚的低溫也會讓探索變得更加危險。隨著調查深入，你會發現居民在失蹤之前似乎正在研究某種無法解釋的現象，而暴風雪可能並不是自然形成的。遊戲沒有大量敵人，而是透過黑暗、寂靜、環境變化與未知威脅營造持續的心理壓力。玩家的探索順序與關鍵選擇也會影響最終能夠發現多少真相，並導向不同的結局。",
+    "tags": [
+      "Survival",
+      "Exploration",
+      "Resource Management",
+      "Psychological Horror",
+      "Multiple Endings"
+    ],
+    "screenshots": [
+      "/games/hollow-winter-01.jpg",
+      "/games/hollow-winter-02.jpg",
+      "/games/hollow-winter-03.jpg"
+    ],
+    "status": ["featured"]
+  },
+  {
+    "id": 8,
+    "title": "Skybound League",
+    "titleZh": "蒼穹聯賽",
+    "cover": "/games/skybound-league-cover.jpg",
+    "banner": "/games/skybound-league-banner.jpg",
+    "genre": ["Sports", "Action", "Competitive"],
+    "price": 690,
+    "rating": 4.5,
+    "releaseDate": "2026-02-06",
+    "developer": "Aerial Core Games",
+    "publisher": "Aerial Core",
+    "description": "駕駛高速飛行裝置參加未來世界最熱門的空中競技聯賽，與隊友合作突破對手防線，爭奪最高榮耀。",
+    "detailDescription": "在未來世界，人類將高速飛行技術融入競技運動，並發展出風靡全球的蒼穹聯賽。玩家將成為一名新加入職業聯賽的飛行選手，駕駛專屬飛行裝置與其他隊伍進行高速空中競技。比賽場地從巨大城市上空延伸至海上平台與特殊人工競技場，每個場地都有不同的地形與障礙。玩家需要掌握飛行、加速、閃避與特殊技能，並與隊友分工合作，在比賽中爭取優勢。不同角色擁有不同的能力定位，有些擅長高速突進，有些能夠干擾對手，也有人專門協助隊友防守。除了單場比賽之外，遊戲還提供完整的賽季制度，玩家可以透過持續參賽提升排名，解鎖新的裝備與外觀。隨著聯賽等級提升，對手的戰術也會更加複雜，玩家需要根據隊伍組成與對手特性調整自己的策略。最終目標是帶領隊伍登上最高級別聯賽，成為新一代的蒼穹冠軍。",
+    "tags": [
+      "Competitive",
+      "Character Customization",
+      "Character Progression",
+      "Real-Time Combat",
+      "Time Attack"
+    ],
+    "screenshots": [
+      "/games/skybound-league-01.jpg",
+      "/games/skybound-league-02.jpg",
+      "/games/skybound-league-03.jpg"
+    ],
+    "status": ["bestseller", "featured"]
+  },
+  {
+    "id": 9,
+    "title": "Echoes of Memory",
+    "titleZh": "記憶迴廊",
+    "cover": "/games/echoes-of-memory-cover.jpg",
+    "banner": "/games/echoes-of-memory-banner.jpg",
+    "genre": ["Puzzle", "Mystery", "Adventure"],
+    "price": 790,
+    "rating": 4.8,
+    "releaseDate": "2026-07-10",
+    "developer": "Glass Door Studio",
+    "publisher": "Glass Door",
+    "description": "進入一名陌生人的破碎記憶，在不斷變化的空間中解開謎題，拼湊散落其中的記憶片段，找出事件背後的真相。",
+    "detailDescription": "玩家醒來時身處一座陌生的房間，眼前沒有出口，也沒有任何關於自己的記憶。唯一能夠使用的線索，是房間中央一台奇怪的記憶裝置。當裝置啟動後，整個空間開始產生變化，玩家也被帶入一段段屬於陌生人的記憶之中。每個記憶場景都由不同的房間、街道與特殊空間組成，玩家必須觀察環境、尋找物品並解開彼此關聯的謎題，才能繼續深入下一段記憶。隨著探索進行，原本互不相關的記憶片段會逐漸產生交集，而某些場景甚至會因為玩家的選擇而發生變化。遊戲不依靠傳統戰鬥，而是將重點放在觀察、推理與環境互動上。玩家需要從對話、物品與場景細節中找出隱藏訊息，並自行判斷哪些記憶是真實發生過的事件。當所有記憶逐漸拼湊完整後，你會發現自己進入這座記憶世界並不是偶然，而真正需要解開的謎題，其實與自己的身分有關。",
+    "tags": [
+      "Puzzle Solving",
+      "Exploration",
+      "Detective",
+      "Story Rich",
+      "Atmospheric"
+    ],
+    "screenshots": [
+      "/games/echoes-of-memory-01.jpg",
+      "/games/echoes-of-memory-02.jpg",
+      "/games/echoes-of-memory-03.jpg"
+    ],
+    "status": ["featured"]
+  },
+  {
+    "id": 10,
+    "title": "Soul Arena",
+    "titleZh": "靈魂鬥場",
+    "cover": "/games/soul-arena-cover.jpg",
+    "banner": "/games/soul-arena-banner.jpg",
+    "genre": ["Fighting", "Action", "Indie"],
+    "price": 690,
+    "rating": 4.6,
+    "releaseDate": "2025-10-24",
+    "developer": "Iron Pulse Games",
+    "publisher": "Iron Pulse",
+    "description": "進入由各地戰士組成的神秘鬥場，掌握獨特戰鬥風格與技能連段，在激烈對決中成為最強的靈魂鬥士。",
+    "detailDescription": "傳說中，世界各地最強的戰士都曾收到一封沒有寄件人的邀請函，而所有收到邀請的人最終都來到了一座位於異世界中的巨大競技場。玩家將選擇一名戰士參加靈魂鬥場，與來自不同地區的對手進行一場又一場的戰鬥。每名角色都有完全不同的戰鬥風格、特殊技能與連段方式，玩家需要熟悉角色的攻擊距離、移動方式與技能組合，才能在戰鬥中取得優勢。隨著比賽進行，可以解鎖新的技能、裝備與外觀，並依照自己的玩法調整角色能力。除了標準的一對一對戰之外，遊戲也提供特殊挑戰與高難度競技賽事，讓玩家面對擁有特殊戰鬥規則的對手。每名強敵背後都隱藏著不同的故事，而玩家在不斷挑戰鬥場頂端的過程中，也會逐漸發現這座競技場真正存在的目的。當所有頂尖戰士都被擊敗後，等待玩家的將是最後一場決定鬥場命運的戰鬥。",
+    "tags": [
+      "Real-Time Combat",
+      "Character Progression",
+      "Skill Tree",
+      "Boss Battles",
+      "Competitive"
+    ],
+    "screenshots": [
+      "/games/soul-arena-01.jpg",
+      "/games/soul-arena-02.jpg",
+      "/games/soul-arena-03.jpg"
+    ],
+    "status": ["bestseller", "featured"]
+  },
+  {
+    "id": 11,
+    "title": "Kingdoms of Ash",
+    "titleZh": "灰燼王國",
+    "cover": "/games/kingdoms-of-ash-cover.jpg",
+    "banner": "/games/kingdoms-of-ash-banner.jpg",
+    "genre": ["RPG", "Strategy", "Adventure"],
+    "price": 1190,
+    "rating": 4.7,
+    "releaseDate": "2026-08-21",
+    "developer": "Ember Crown Studio",
+    "publisher": "Ember Crown",
+    "description": "在舊王國毀滅後踏上重建之路，招募夥伴、探索荒蕪領地並建立新的勢力，在戰爭與外交之間決定王國的未來。",
+    "detailDescription": "一場持續十年的戰爭讓原本繁榮的王國化為灰燼，倖存的人們分散在各地建立小型聚落。玩家將扮演一名失去家園的年輕領主，從一座幾乎被遺忘的村莊開始，逐步重新建立自己的勢力。冒險過程中可以探索荒廢城市、古代遺跡與危險森林，尋找資源與失落的技術，同時招募擁有不同背景與能力的夥伴。每名夥伴都有自己的故事與立場，而玩家的選擇可能影響他們是否願意繼續追隨。除了角色戰鬥與成長之外，你還需要管理領地的人口、資源與防禦設施，並與附近勢力建立外交關係。可以選擇透過貿易與聯盟逐步壯大，也可以使用軍事力量征服其他領地。不同的決策會改變王國的發展方向，也會影響部分角色與地區的命運。當越來越多的人加入你的旗幟後，你將再次面對那場摧毀舊王國的戰爭，而這一次，你必須決定究竟要建立一個全新的國家，還是讓過去的王國重新復活。",
+    "tags": [
+      "Story Rich",
+      "Character Progression",
+      "Resource Management",
+      "Diplomacy",
+      "Exploration"
+    ],
+    "screenshots": [
+      "/games/kingdoms-of-ash-01.jpg",
+      "/games/kingdoms-of-ash-02.jpg",
+      "/games/kingdoms-of-ash-03.jpg"
+    ],
+    "status": ["bestseller"]
+  },
+  {
+    "id": 12,
+    "title": "Deep Sea Colony",
+    "titleZh": "深海殖民地",
+    "cover": "/games/deep-sea-colony-cover.jpg",
+    "banner": "/games/deep-sea-colony-banner.jpg",
+    "genre": ["Simulation", "Strategy", "Indie"],
+    "price": 890,
+    "rating": 4.6,
+    "releaseDate": "2025-09-18",
+    "developer": "Blue Current Games",
+    "publisher": "Blue Current",
+    "description": "在未知的深海建立人類殖民基地，管理能源、氧氣與物資，在探索海底世界的同時讓殖民地逐步成長。",
+    "detailDescription": "隨著地表資源逐漸減少，人類開始將目光轉向尚未被充分探索的深海。玩家將負責管理一座剛建立於海底的微型殖民基地，從幾個基本艙室與有限的能源供應開始，逐步將基地發展成能夠容納數百人的完整聚落。深海環境充滿危險，氧氣、能源、食物與建築材料都必須受到嚴格管理。玩家需要規劃基地內部空間，建造發電設施、研究中心、居住區與資源處理設備，並確保不同設施之間維持穩定運作。隨著基地擴張，可以派遣探測隊前往更深的海域尋找礦物與未知生物，同時也可能發現古老的人造遺跡。部分資源必須在有限的潛水時間內取得，因此玩家需要在探索價值與安全風險之間做出選擇。當殖民地規模逐漸擴大後，居民需求與內部管理也會變得更加複雜。你不只是建造一座基地，而是在一個完全不適合人類生存的環境中，建立一個真正能夠長久延續的深海社會。",
+    "tags": [
+      "Base Building",
+      "Resource Management",
+      "Exploration",
+      "World Building",
+      "Crafting"
+    ],
+    "screenshots": [
+      "/games/deep-sea-colony-01.jpg",
+      "/games/deep-sea-colony-02.jpg",
+      "/games/deep-sea-colony-03.jpg"
+    ],
+    "status": ["featured"]
+  },
+  {
+    "id": 13,
+    "title": "Shadow Protocol",
+    "titleZh": "暗影協議",
+    "cover": "/games/shadow-protocol-cover.jpg",
+    "banner": "/games/shadow-protocol-banner.jpg",
+    "genre": ["Action", "Stealth", "Mystery"],
+    "price": 1090,
+    "rating": 4.7,
+    "releaseDate": "2026-03-28",
+    "developer": "Black Signal Interactive",
+    "publisher": "Black Signal",
+    "description": "化身近未來情報特工，潛入戒備森嚴的企業設施蒐集機密，在謊言與陰謀之間找出一場全球危機背後的真正主使者。",
+    "detailDescription": "在近未來世界，數間跨國企業已經掌握足以影響各國政府的科技與情報。玩家將扮演一名沒有正式身分的情報特工，接受一系列高風險潛入任務。每項任務都會將你帶入不同的環境，包括高科技研究所、私人軍事基地、企業總部與戒備森嚴的資料中心。玩家可以選擇避開敵人、利用環境製造干擾，也可以在必要時直接與守衛交戰。任務中的監視器、警報系統與敵人巡邏路線都會影響潛入方式，因此仔細觀察環境比單純的戰鬥能力更加重要。隨著任務進行，你會逐漸取得更多機密資料，並發現不同案件其實都指向同一個神秘組織。玩家可以決定將情報交給不同勢力，也可以選擇隱藏部分真相，這些決定會影響後續任務與部分角色的立場。當所有線索逐漸拼湊完成後，你會發現自己接受的任務可能從一開始就是某個更大計畫的一部分。最終，你必須決定究竟要揭露真相，還是成為這場陰謀的一部分。",
+    "tags": [
+      "Stealth",
+      "Exploration",
+      "Story Rich",
+      "Choice Driven",
+      "Detective"
+    ],
+    "screenshots": [
+      "/games/shadow-protocol-01.jpg",
+      "/games/shadow-protocol-02.jpg",
+      "/games/shadow-protocol-03.jpg"
+    ],
+    "status": ["bestseller", "featured"]
+  },
+  {
+    "id": 14,
+    "title": "Letters Never Sent",
+    "titleZh": "未寄出的信",
+    "cover": "/games/letters-never-sent-cover.jpg",
+    "banner": "/games/letters-never-sent-banner.jpg",
+    "genre": ["Visual Novel", "Mystery", "Story"],
+    "price": 590,
+    "rating": 4.9,
+    "releaseDate": "2026-09-04",
+    "developer": "Paper Moon Studio",
+    "publisher": "Paper Moon",
+    "description": "整理一箱從未寄出的信件，在文字與回憶之間追尋一段被時間掩埋的關係，逐漸揭開寫信者從未說出口的秘密。",
+    "detailDescription": "玩家回到一棟即將出售的老宅整理祖母留下的物品，卻在閣樓發現一個保存數十年的木箱。箱子裡裝著大量從未寄出的信件，每一封信都寫給不同的人，內容卻似乎都與同一段往事有關。玩家將透過閱讀信件、整理日期與人物關係，逐步還原當年發生在這座小鎮上的故事。隨著更多信件被找到，你會發現不同人物對同一件事情的描述並不完全一致，而某些重要的信件甚至被刻意撕毀或隱藏。遊戲以角色對話、文字選項與線索整理為主要玩法，玩家可以選擇相信不同角色，也可以根據目前掌握的資訊推測事件真相。部分選擇會改變角色之間的關係，並影響後續能夠取得的信件與資訊。當所有故事逐漸連結起來後，玩家將面臨最後的選擇：是否要將這段被隱藏多年的真相告訴仍然活著的人。不同的調查方向與選擇會導向不同結局，而真正的答案可能並不是玩家最初所想像的那樣。",
+    "tags": [
+      "Story Rich",
+      "Detective",
+      "Choice Driven",
+      "Multiple Endings",
+      "Relationship System"
+    ],
+    "screenshots": [
+      "/games/letters-never-sent-01.jpg",
+      "/games/letters-never-sent-02.jpg",
+      "/games/letters-never-sent-03.jpg"
+    ],
+    "status": ["new", "featured"]
+  },
+  {
+    "id": 15,
+    "title": "Last Bastion",
+    "titleZh": "最後堡壘",
+    "cover": "/games/last-bastion-cover.jpg",
+    "banner": "/games/last-bastion-banner.jpg",
+    "genre": ["Strategy", "Roguelike", "Survival"],
+    "price": 890,
+    "rating": 4.6,
+    "releaseDate": "2026-01-09",
+    "developer": "Fortress Lab",
+    "publisher": "Fortress Lab",
+    "description": "在文明崩潰後建立最後的防線，管理有限資源、建造防禦設施並抵擋一波又一波的敵人，讓倖存者活到最後。",
+    "detailDescription": "世界在一場未知災難後迅速崩潰，大量城市失去聯繫，倖存者只能躲進各地建立的小型避難所。玩家將負責管理其中一座位於荒野中的最後堡壘，從幾間簡陋建築開始，逐步建立能夠抵禦外部威脅的防線。白天可以派遣倖存者搜尋食物、材料與其他有用資源，也可以修建圍牆、防禦塔與工作設施。到了夜晚，未知的敵人會從四面八方發動攻擊，而玩家必須根據當天取得的資源調整防禦配置。每次遊戲開始時，周圍地形、資源位置、事件與敵人類型都會有所不同，因此玩家不能依賴固定策略。某些倖存者也會因為個人背景與性格產生不同需求，玩家必須在有限資源下決定優先保護哪些人。當堡壘逐漸發展後，可以解鎖新的科技、防禦設施與生存方式，但一次錯誤的決策仍可能讓整個基地陷入危機。即使堡壘最終失守，玩家仍能保留部分研究成果，讓下一次挑戰擁有新的可能性。你的最終目標只有一個：讓人類文明在這片荒蕪世界中繼續存在。",
+    "tags": [
+      "Base Building",
+      "Resource Management",
+      "Survival",
+      "Procedural Generation",
+      "Randomized Runs"
+    ],
+    "screenshots": [
+      "/games/last-bastion-01.jpg",
+      "/games/last-bastion-02.jpg",
+      "/games/last-bastion-03.jpg"
+    ],
+    "status": ["bestseller"]
+  },
+  {
+    "id": 16,
+    "title": "Neon Requiem",
+    "titleZh": "霓虹輓歌",
+    "cover": "/games/neon-requiem-cover.jpg",
+    "banner": "/games/neon-requiem-banner.jpg",
+    "genre": ["RPG", "Action", "Sci-Fi"],
+    "price": 1290,
+    "rating": 4.8,
+    "releaseDate": "2026-09-25",
+    "developer": "Chrome Raven Studio",
+    "publisher": "Chrome Raven",
+    "description": "穿梭於被企業掌控的霓虹都市，改造自己的身體與戰鬥能力，在追查失蹤記憶的過程中揭開城市最深處的秘密。",
+    "detailDescription": "在高度發展的近未來都市中，人類已經可以透過義體與人工神經系統改造自己的身體。然而，這些技術幾乎全部掌握在少數大型企業手中。玩家將扮演一名靠接受地下委託維生的傭兵，在一次任務失敗後發現自己的記憶遭到不明人士篡改。為了找回失去的記憶，你必須穿越城市不同區域，接受傭兵委託、調查企業設施並與地下組織接觸。戰鬥中可以使用不同武器與義體能力，例如強化近戰攻擊、短距離高速移動或暫時駭入敵方系統。玩家可以自由組合技能與裝備，建立符合自己戰鬥風格的角色。城市中的不同勢力也會對玩家的行動做出反應，你可以選擇協助企業、地下組織或完全獨立行動。隨著記憶逐漸恢復，你會發現自己過去並不是普通的傭兵，而曾經參與一項可能改變整座城市權力結構的秘密計畫。最終，你必須決定這段真相是否值得被揭露，以及自己究竟願意為了自由付出多少代價。",
+    "tags": [
+      "Character Customization",
+      "Real-Time Combat",
+      "Character Progression",
+      "Skill Tree",
+      "Story Rich"
+    ],
+    "screenshots": [
+      "/games/neon-requiem-01.jpg",
+      "/games/neon-requiem-02.jpg",
+      "/games/neon-requiem-03.jpg"
+    ],
+    "status": ["new", "bestseller"]
+  },
+  {
+    "id": 17,
+    "title": "Wild Frontier",
+    "titleZh": "荒野邊境",
+    "cover": "/games/wild-frontier-cover.jpg",
+    "banner": "/games/wild-frontier-banner.jpg",
+    "genre": ["Adventure", "Survival", "Simulation"],
+    "price": 990,
+    "rating": 4.7,
+    "releaseDate": "2025-08-15",
+    "developer": "Wildpath Interactive",
+    "publisher": "Wildpath",
+    "description": "踏入未被文明觸及的廣闊荒野，建立自己的生存據點，探索未知地區並利用周圍資源打造屬於自己的生活方式。",
+    "detailDescription": "一片位於大陸最西方的廣闊荒野，在數百年來始終沒有被人類真正開發。玩家將扮演一名離開城市、前往這片未知土地生活的探險者，從一個簡單的臨時營地開始建立自己的家園。荒野中存在森林、河流、山地與平原等不同環境，每個區域都有獨特的資源與野生動物。玩家需要探索周圍環境，收集木材、礦石與食物，並製作工具、武器與生活設施。隨著基地逐漸擴張，可以建造更完善的房屋、農田與工作區，甚至馴養部分野生動物。天候與季節也會影響生存方式，冬季需要提前準備足夠的食物與燃料，而暴雨可能讓部分地區暫時無法通行。除了生存之外，荒野中還散落著過去探險者留下的遺跡與物品，探索這些地方可以逐漸了解這片土地曾經發生過的故事。遊戲沒有固定的單一路線，你可以專注於建立舒適的家園，也可以深入未知地區尋找稀有資源，甚至嘗試探索整個荒野。你的生活方式將由自己的選擇決定。",
+    "tags": [
+      "Open World",
+      "Exploration",
+      "Survival",
+      "Crafting",
+      "Base Building"
+    ],
+    "screenshots": [
+      "/games/wild-frontier-01.jpg",
+      "/games/wild-frontier-02.jpg",
+      "/games/wild-frontier-03.jpg"
+    ],
+    "status": ["featured"]
+  },
+  {
+    "id": 18,
+    "title": "Clockwork Heights",
+    "titleZh": "齒輪高塔",
+    "cover": "/games/clockwork-heights-cover.jpg",
+    "banner": "/games/clockwork-heights-banner.jpg",
+    "genre": ["Platformer", "Adventure", "Puzzle"],
+    "price": 690,
+    "rating": 4.7,
+    "releaseDate": "2026-07-31",
+    "developer": "Copper Kite Studio",
+    "publisher": "Copper Kite",
+    "description": "攀登一座永不停歇的巨大機械城市，在精密機關與危險陷阱之間尋找通往塔頂的道路，揭開城市停止運轉的原因。",
+    "detailDescription": "在一座由無數齒輪、升降平台與巨大機械結構組成的城市中，所有居民都依靠中央機械核心維持日常生活。某一天，城市最上層的核心突然停止運轉，整座城市開始逐漸失去動力。玩家將扮演一名年輕的機械修復師，從城市最底層出發，沿著錯綜複雜的機械結構一路向上。遊戲的主要玩法是平台跳躍與環境解謎，玩家需要利用移動平台、旋轉齒輪、彈射裝置與各種機械機關穿越危險區域。隨著探索深入，城市的結構會變得更加複雜，某些區域甚至需要回頭利用之前啟動的機械裝置才能繼續前進。沿途可以找到散落在城市各處的機械圖紙與居民留下的記錄，逐漸拼湊出城市真正的歷史。部分區域還隱藏著特殊道路與秘密房間，鼓勵玩家仔細探索每個角落。當你終於抵達城市最頂端時，將發現中央核心停止運轉並不是單純的機械故障，而是有人刻意讓整座城市陷入停滯。最後，你必須決定是否重新啟動這座城市，以及它未來應該以什麼樣的方式繼續運轉。",
+    "tags": [
+      "Puzzle Solving",
+      "Exploration",
+      "Atmospheric",
+      "Story Rich",
+      "World Building"
+    ],
+    "screenshots": [
+      "/games/clockwork-heights-01.jpg",
+      "/games/clockwork-heights-02.jpg",
+      "/games/clockwork-heights-03.jpg"
+    ],
+    "status": []
+  },
+  {
+    "id": 19,
+    "title": "Harbor Life",
+    "titleZh": "港灣人生",
+    "cover": "/games/harbor-life-cover.jpg",
+    "banner": "/games/harbor-life-banner.jpg",
+    "genre": ["Simulation", "Casual", "Indie"],
+    "price": 590,
+    "rating": 4.6,
+    "releaseDate": "2025-12-05",
+    "developer": "Blue Harbor Studio",
+    "publisher": "Blue Harbor",
+    "description": "接手一座逐漸沒落的小港口，經營商店與碼頭、管理船隊並與居民建立關係，讓這座港灣重新恢復往日的活力。",
+    "detailDescription": "玩家從祖父留下的一座老舊港口開始自己的新生活。曾經繁忙的港灣如今只剩少數居民與幾艘老舊漁船，碼頭設施也因長年缺乏維護而逐漸損壞。玩家需要從最基本的港口工作開始，修復碼頭、管理船隻並將捕獲的魚貨與其他商品帶到市場販售。隨著收入增加，可以升級倉庫、商店與碼頭設施，也能購買新的船隻，前往附近海域進行探索與貿易。不同港口擁有不同的商品與價格，因此玩家需要觀察市場需求並決定下一趟航行的目的地。除了經營之外，港灣裡還住著許多性格不同的居民，他們各自擁有工作、生活與自己的故事。玩家可以透過完成委託、參與季節活動與日常互動逐漸融入社區。隨著港口重新繁榮，越來越多商人與旅客會來到這裡，也會帶來新的商業機會與事件。你可以專注發展商業帝國，也可以放慢腳步享受釣魚、探索海岸與和居民相處的生活。",
+    "tags": [
+      "Economy",
+      "Trading",
+      "Fishing",
+      "Relationship System",
+      "Exploration"
+    ],
+    "screenshots": [
+      "/games/harbor-life-01.jpg",
+      "/games/harbor-life-02.jpg",
+      "/games/harbor-life-03.jpg"
+    ],
+    "status": ["bestseller", "featured"]
+  },
+  {
+    "id": 20,
+    "title": "Veil of Lies",
+    "titleZh": "謊影",
+    "cover": "/games/veil-of-lies-cover.jpg",
+    "banner": "/games/veil-of-lies-banner.jpg",
+    "genre": ["RPG", "Mystery", "Stealth"],
+    "price": 990,
+    "rating": 4.7,
+    "releaseDate": "2026-10-02",
+    "developer": "Veiled Moon Studio",
+    "publisher": "Veiled Moon",
+    "description": "在一座被權力與謊言籠罩的城市中調查連續失蹤事件，利用情報、潛入與角色能力逐步揭開隱藏在黑暗中的真相。",
+    "detailDescription": "黑曜城是一座由數個強大勢力共同控制的城市，表面上維持著繁榮與秩序，暗地裡卻存在大量無法被公開的交易與秘密。玩家將扮演一名受僱於地下情報組織的調查員，接受委託調查一連串看似毫無關聯的失蹤案件。為了取得情報，你可以潛入私人住宅、企業辦公室與地下交易場所，尋找文件、竊聽談話或跟蹤關鍵人物。玩家可以根據自己的角色能力選擇不同的解決方式，例如強化潛行能力避開守衛，或提升交涉能力從人物口中取得重要資訊。隨著案件逐漸深入，你會發現失蹤者之間存在一個共同的秘密，而不同勢力似乎都在試圖掩蓋同一件事情。玩家的調查順序與選擇會影響可取得的情報，也可能讓部分角色成為盟友或敵人。當所有線索逐漸連結後，你將面對一個足以改變城市權力結構的真相。最後，你必須決定要將真相公開、利用它換取權力，還是讓這個秘密永遠消失。",
+    "tags": [
+      "Stealth",
+      "Detective",
+      "Story Rich",
+      "Choice Driven",
+      "Character Progression"
+    ],
+    "screenshots": [
+      "/games/veil-of-lies-01.jpg",
+      "/games/veil-of-lies-02.jpg",
+      "/games/veil-of-lies-03.jpg"
+    ],
+    "status": ["new", "featured"]
+  },
+  {
+    "id": 21,
+    "title": "Tidal Horizon",
+    "titleZh": "潮汐邊境",
+    "cover": "/games/tidal-horizon-cover.jpg",
+    "banner": "/games/tidal-horizon-banner.jpg",
+    "genre": ["Action", "Adventure", "Survival"],
+    "price": 1090,
+    "rating": 4.7,
+    "releaseDate": "2026-04-03",
+    "developer": "Tidebreaker Studio",
+    "publisher": "Tidebreaker",
+    "description": "在海水淹沒大陸後駕駛改裝船隻穿越無盡海域，探索殘存島嶼、尋找資源並與其他倖存者爭奪有限的生存空間。",
+    "detailDescription": "一場全球性的海平面上升讓大部分陸地永遠沉入海底，人類只能在少數高地與人工島嶼上建立新的聚落。玩家將扮演一名駕駛改裝船隻在海上尋找資源的倖存者，從一艘設備簡陋的小船開始探索這片全新的海洋世界。航行途中可以發現沉沒城市、廢棄平台與未知島嶼，並從中取得燃料、食物、零件與其他生存物資。玩家需要管理船上的能源與補給，同時維修與升級船隻，使其能夠前往更加危險的海域。部分島嶼上存在其他倖存者聚落，你可以選擇與他們交易、接受委託，也可能因為資源競爭而發生衝突。海洋中的天候與環境也會影響航行，暴風雨可能迫使你改變路線，而某些危險海域則隱藏著珍貴的資源。隨著探索範圍擴大，你會逐漸發現這場災難並非完全自然形成，而海平面上升背後似乎還存在一個被人刻意隱藏的真相。最終，你必須決定是尋找能讓人類重新回到陸地的方法，還是接受新的海洋文明。",
+    "tags": [
+      "Open World",
+      "Exploration",
+      "Survival",
+      "Resource Management",
+      "Crafting"
+    ],
+    "screenshots": [
+      "/games/tidal-horizon-01.jpg",
+      "/games/tidal-horizon-02.jpg",
+      "/games/tidal-horizon-03.jpg"
+    ],
+    "status": ["bestseller"]
+  },
+  {
+    "id": 22,
+    "title": "Evergreen City",
+    "titleZh": "永恆之城",
+    "cover": "/games/evergreen-city-cover.jpg",
+    "banner": "/games/evergreen-city-banner.jpg",
+    "genre": ["Simulation", "Strategy", "Casual"],
+    "price": 790,
+    "rating": 4.7,
+    "releaseDate": "2026-02-27",
+    "developer": "Greenline Interactive",
+    "publisher": "Greenline",
+    "description": "從一片空地開始打造自己的城市，規劃住宅、商業與公共設施，在有限資源下讓城市逐步成長並成為居民理想的家園。",
+    "detailDescription": "玩家將接手一片尚未開發的土地，從幾條道路與最基本的住宅區開始建立一座全新的城市。隨著人口增加，你需要規劃住宅、商業區、工業區與公共設施，並確保城市擁有足夠的水、電力與交通系統。不同類型的建築會影響居民需求與城市經濟，因此單純增加人口並不代表城市一定能夠持續發展。玩家需要觀察居民的生活狀況，調整道路與公共設施的位置，並透過稅收與城市政策維持財政平衡。隨著城市規模擴大，新的區域與建築會逐漸解鎖，也會出現交通壅塞、環境污染與人口分布不均等問題。玩家可以選擇將城市發展成高度現代化的大都市，也可以降低發展速度，打造以綠地與居民生活品質為主的城市。城市中的每個區域都會隨著時間逐漸改變，而你的規劃方式將決定居民最後生活在什麼樣的城市。最終目標並不是單純追求最大的城市，而是建立一座能夠長期穩定運作的城市。",
+    "tags": [
+      "City Building",
+      "Resource Management",
+      "Economy",
+      "World Building",
+      "Relationship System"
+    ],
+    "screenshots": [
+      "/games/evergreen-city-01.jpg",
+      "/games/evergreen-city-02.jpg",
+      "/games/evergreen-city-03.jpg"
+    ],
+    "status": ["featured"]
+  },
+  {
+    "id": 23,
+    "title": "Pulse Breaker",
+    "titleZh": "脈衝破界",
+    "cover": "/games/pulse-breaker-cover.jpg",
+    "banner": "/games/pulse-breaker-banner.jpg",
+    "genre": ["Rhythm", "Action", "Platformer"],
+    "price": 690,
+    "rating": 4.8,
+    "releaseDate": "2026-09-12",
+    "developer": "Beatline Studio",
+    "publisher": "Beatline",
+    "description": "跟隨不斷變化的音樂節奏穿越高速機械城市，在跳躍、閃避與攻擊之間掌握節拍，突破層層關卡。",
+    "detailDescription": "在一座由音樂與機械共同運轉的巨大城市中，每一個區域都依靠中央節奏核心維持運作。然而某一天，城市的節奏核心遭到未知力量干擾，原本穩定的機械系統開始失控。玩家將扮演一名能夠感知節奏能量的跑者，踏上穿越城市的冒險。遊戲中的移動、跳躍、攻擊與特殊能力都會與背景音樂節拍產生關聯，玩家需要根據音樂節奏掌握操作時機，才能順利通過高速移動的平台與危險障礙。隨著關卡推進，音樂節奏會逐漸加快，也會加入不同的節奏變化與特殊機關。部分敵人需要按照特定節奏連續攻擊才能造成有效傷害，而某些平台則會隨著音樂節拍出現或消失。遊戲也提供不同角色能力與裝備，可以讓玩家選擇更加適合自己的操作方式。每個區域都有獨立的音樂風格與關卡設計，並隱藏著與城市歷史有關的記錄。當玩家逐漸接近核心區域後，會發現城市失控並不是單純的系統故障，而是一場刻意安排的計畫。最後，你必須在最後一段音樂結束之前，重新啟動城市的節奏核心。",
+    "tags": [
+      "Time Attack",
+      "Real-Time Combat",
+      "Skill Tree",
+      "Character Progression",
+      "Boss Battles"
+    ],
+    "screenshots": [
+      "/games/pulse-breaker-01.jpg",
+      "/games/pulse-breaker-02.jpg",
+      "/games/pulse-breaker-03.jpg"
+    ],
+    "status": ["new", "bestseller"]
+  },
+  {
+    "id": 24,
+    "title": "Lanterns of Dawn",
+    "titleZh": "曙光燈語",
+    "cover": "/games/lanterns-of-dawn-cover.jpg",
+    "banner": "/games/lanterns-of-dawn-banner.jpg",
+    "genre": ["Puzzle", "Casual", "Indie"],
+    "price": 590,
+    "rating": 4.7,
+    "releaseDate": "2026-06-05",
+    "developer": "Lumen Field Studio",
+    "publisher": "Lumen Field",
+    "description": "探索被黑暗籠罩的古老遺跡，利用神秘燈具操控光線與機關，在一步步解開謎題的過程中找回失落文明的故事。",
+    "detailDescription": "在一片被森林包圍的古老遺跡中，數百年來從未有人真正了解這座文明究竟為何消失。玩家將扮演一名偶然進入遺跡的旅行者，並在入口處找到一盞能夠改變光線方向的神秘燈具。這盞燈不只是照亮黑暗的工具，也是解開整座遺跡機關的關鍵。玩家需要觀察環境中的光線、鏡面、影子與特殊符號，利用燈具改變光線路徑，啟動被封閉多年的機關。隨著探索深入，謎題會逐漸加入旋轉平台、移動牆面與不同光源等元素，要求玩家同時觀察多個環境變化。部分區域並沒有唯一解法，玩家可以嘗試不同方式找到通往下一個區域的道路。遺跡中還散落著古老壁畫、文字與居民留下的物品，透過這些線索可以逐漸了解這個文明曾經發生過的事情。遊戲沒有傳統戰鬥與時間限制，玩家可以按照自己的節奏探索每個區域。當最後一座核心神殿被重新點亮後，你會發現這座文明消失的原因與那盞神秘燈具本身有著密切關係，而真正的答案也將等待玩家親自做出最後的選擇。",
+    "tags": [
+      "Puzzle Solving",
+      "Exploration",
+      "Atmospheric",
+      "Story Rich",
+      "World Building"
+    ],
+    "screenshots": [
+      "/games/lanterns-of-dawn-01.jpg",
+      "/games/lanterns-of-dawn-02.jpg",
+      "/games/lanterns-of-dawn-03.jpg"
+    ],
+    "status": ["featured"]
+  },
+  {
+    "id": 25,
+    "title": "Arcane Deck",
+    "titleZh": "秘術牌局",
+    "cover": "/games/arcane-deck-cover.jpg",
+    "banner": "/games/arcane-deck-banner.jpg",
+    "genre": ["Roguelike", "Strategy", "Indie"],
+    "price": 690,
+    "rating": 4.6,
+    "releaseDate": "2026-05-22",
+    "developer": "Black Card Studio",
+    "publisher": "Black Card",
+    "description": "組合不同魔法卡牌挑戰不斷變化的秘境，在有限資源與隨機事件中建立最強牌組，突破一場又一場未知戰鬥。",
+    "detailDescription": "傳說中，世界各地散落著能夠改變現實規則的神秘卡牌，而所有卡牌最終都會指向一座不存在於任何地圖上的秘境。玩家將扮演一名秘術探索者，帶著一副最基本的卡牌進入這座不斷變化的迷宮。每次進入秘境時，遭遇的敵人、房間與特殊事件都會重新排列，因此玩家必須根據當前取得的卡牌與資源調整策略。戰鬥採用回合制卡牌系統，每張卡牌都具有不同效果，例如攻擊敵人、強化角色、恢復生命或改變下一回合的行動順序。隨著冒險深入，可以從戰鬥獎勵、商店與特殊事件中取得新的卡牌，也可以移除不需要的卡牌，逐漸建立符合自己玩法的牌組。部分卡牌之間能產生特殊連鎖效果，讓玩家可以嘗試不同的組合方式。當玩家在秘境中前進時，也必須決定是否冒險挑戰高難度區域以換取更強大的卡牌。即使最終失敗，仍能解鎖新的卡牌與角色能力，讓下一次挑戰擁有更多選擇。隨著探索次數增加，你會逐漸發現這座秘境似乎正在觀察每一名進入其中的人，而真正的目的可能並不是等待某個人征服它，而是在尋找能夠改變世界規則的人。",
+    "tags": [
+      "Deck Building",
+      "Randomized Runs",
+      "Procedural Generation",
+      "Skill Tree",
+      "Boss Battles"
+    ],
+    "screenshots": [
+      "/games/arcane-deck-01.jpg",
+      "/games/arcane-deck-02.jpg",
+      "/games/arcane-deck-03.jpg"
+    ],
+    "status": ["bestseller"]
+  },
+  {
+    "id": 26,
+    "title": "Football Dynasty",
+    "titleZh": "足球王朝",
+    "cover": "/games/football-dynasty-cover.jpg",
+    "banner": "/games/football-dynasty-banner.jpg",
+    "genre": ["Sports", "Simulation", "Strategy"],
+    "price": 790,
+    "rating": 4.5,
+    "releaseDate": "2026-08-07",
+    "developer": "Final Whistle Studio",
+    "publisher": "Final Whistle",
+    "description": "從一支默默無聞的足球隊開始，培養年輕球員、制定比賽戰術並管理球隊財務，逐步登上世界最高級別聯賽。",
+    "detailDescription": "玩家將接手一支長年在低級別足球聯賽中苦苦掙扎的小型職業球隊，從有限的預算與並不突出的球員陣容開始，逐步建立一支真正具有競爭力的隊伍。你需要負責招募新球員、培養年輕球員、安排訓練計畫，並根據每名球員的能力制定適合的足球戰術。比賽本身不需要玩家直接控制球員，而是透過賽前陣容、戰術安排與比賽中的臨場決策影響結果。不同對手擁有不同的進攻與防守風格，因此單一戰術並不能適用於整個賽季。除了球場上的表現之外，你還需要管理球隊薪資、轉會預算、訓練設施與贊助合約。年輕球員可能需要多年培養才能成為主力，而高薪明星球員雖然能立即提升球隊實力，也可能對財務造成巨大壓力。隨著球隊排名提升，會有更多贊助商與球員願意加入，但聯賽中的競爭也會越來越激烈。每個賽季結束後，你都必須重新評估球隊陣容與未來方向。最終目標是帶領這支不起眼的足球隊一路晉級最高級別聯賽，並在最重要的冠軍賽季中證明自己的管理能力。",
+    "tags": [
+      "Character Progression",
+      "Economy",
+      "Relationship System",
+      "Competitive",
+      "Trading"
+    ],
+    "screenshots": [
+      "/games/football-dynasty-01.jpg",
+      "/games/football-dynasty-02.jpg",
+      "/games/football-dynasty-03.jpg"
+    ],
+    "status": ["featured"]
+  },
+  {
+    "id": 27,
+    "title": "The Last Broadcast",
+    "titleZh": "最後廣播",
+    "cover": "/games/the-last-broadcast-cover.jpg",
+    "banner": "/games/the-last-broadcast-banner.jpg",
+    "genre": ["Horror", "Mystery", "Adventure"],
+    "price": 890,
+    "rating": 4.8,
+    "releaseDate": "2026-10-09",
+    "developer": "Night Signal Studio",
+    "publisher": "Night Signal",
+    "description": "調查一座突然重新發出訊號的廢棄廣播站，在神秘錄音與失蹤人員留下的線索中，找出多年以前被掩蓋的真相。",
+    "detailDescription": "位於山區深處的一座舊廣播站，在關閉超過二十年後突然重新開始發出訊號。奇怪的是，訊號內容並不是新的廣播，而是不斷重複播放一段來自多年前的緊急求救錄音。玩家將扮演一名負責調查訊號來源的記者，獨自前往這座早已被廢棄的廣播站。進入建築後，你會發現電力系統似乎仍然維持運作，而部分廣播設備甚至會在沒有人操作的情況下自行啟動。玩家需要探索控制室、錄音室、地下設備區與附近的員工宿舍，尋找錄音帶、文件與其他遺留物品，逐步還原當年發生的事件。隨著調查深入，你會發現不同錄音中的內容存在矛盾，而部分聲音甚至會提到玩家尚未做出的行動。遊戲沒有大量戰鬥，而是透過聲音、環境變化與有限的視野製造持續的心理壓力。玩家需要自行判斷哪些線索可信，也必須決定是否繼續播放那些可能帶來危險的錄音。不同的探索順序與選擇會影響玩家最後得到的資訊，並可能導向不同結局。當最後一段廣播被完整播放後，你將發現這座廣播站多年來真正等待的，或許從來都不是一名調查員，而是一個能夠聽懂那段訊息的人。",
+    "tags": [
+      "Psychological Horror",
+      "Detective",
+      "Exploration",
+      "Atmospheric",
+      "Story Rich"
+    ],
+    "screenshots": [
+      "/games/the-last-broadcast-01.jpg",
+      "/games/the-last-broadcast-02.jpg",
+      "/games/the-last-broadcast-03.jpg"
+    ],
+    "status": ["new"]
+  },
+  {
+    "id": 28,
+    "title": "Street Kings",
+    "titleZh": "街頭王者",
+    "cover": "/games/street-kings-cover.jpg",
+    "banner": "/games/street-kings-banner.jpg",
+    "genre": ["Sports", "Action", "Competitive"],
+    "price": 690,
+    "rating": 4.6,
+    "releaseDate": "2026-09-18",
+    "developer": "Backboard Studio",
+    "publisher": "Backboard",
+    "description": "組建自己的街頭籃球隊，參加 3 對 3 城市賽事，在高速攻防與角色技能之間找到最佳配合，成為街區最強球隊。",
+    "detailDescription": "在這個以街頭籃球文化聞名的城市中，各個街區都有屬於自己的球場與隊伍。玩家將從一名剛加入街頭籃球圈的年輕球員開始，與其他球員組成三人隊伍，挑戰不同街區的 3 對 3 籃球賽事。每名球員都有不同的位置、能力與特殊技能，有人擅長突破與運球，有人擅長外線投籃，也有人專門負責防守與籃板。比賽除了考驗基本籃球操作之外，也需要玩家掌握隊友之間的配合與場上空間。隨著勝利場次增加，可以招募新的球員、提升角色能力並解鎖新的球場與外觀。不同街區的球隊擁有不同的比賽風格，有些強調快速進攻，有些則擅長防守與身體對抗。玩家可以根據對手調整自己的陣容與戰術，甚至培養一支完全符合自己玩法的隊伍。除了單人賽季之外，遊戲也提供競技模式，讓玩家與其他玩家組成隊伍進行 3 對 3 對戰。當你一路擊敗各個街區的頂尖球隊後，最終將挑戰城市中心舉行的年度街頭籃球大賽，爭奪真正的街頭王者稱號。",
+    "tags": [
+      "Competitive",
+      "Character Progression",
+      "Character Customization",
+      "Real-Time Combat",
+      "Relationship System"
+    ],
+    "screenshots": [
+      "/games/street-kings-01.jpg",
+      "/games/street-kings-02.jpg",
+      "/games/street-kings-03.jpg"
+    ],
+    "status": ["new", "bestseller", "featured"]
+  },
+  {
+    "id": 29,
+    "title": "Midnight Letters",
+    "titleZh": "午夜來信",
+    "cover": "/games/midnight-letters-cover.jpg",
+    "banner": "/games/midnight-letters-banner.jpg",
+    "genre": ["Visual Novel", "Mystery", "Adventure"],
+    "price": 590,
+    "rating": 4.9,
+    "releaseDate": "2026-10-16",
+    "developer": "Moonlit Page Studio",
+    "publisher": "Moonlit Page",
+    "description": "在轉入新學校後收到一封封來自午夜的匿名信，與不同同學建立關係並追查信件來源，揭開校園中被隱藏多年的秘密。",
+    "detailDescription": "玩家因家庭因素轉學到一所位於山區的小型高中，原本只想安靜度過最後一年的學生生活，卻在入學第一天晚上收到一封沒有署名的匿名信。信中只有一句話，提醒你不要在午夜之後前往學校舊校舍。隨著時間推進，你開始陸續收到更多內容不同的信件，而信中的資訊似乎都與學校數年前發生的一起學生失蹤事件有關。白天，你可以參與課程、社團活動與同學互動，逐漸與不同角色建立關係；到了放學後，則可以選擇調查校園中的不同區域，尋找文件、照片與其他線索。不同角色掌握著不同的資訊，但他們是否願意告訴你真相，會受到你平時與他們相處方式的影響。部分選擇可能提升角色之間的信任，也可能讓某些人開始懷疑你的真正目的。隨著匿名信內容逐漸完整，你會發現當年的失蹤事件與現在收到的信件並不是兩件獨立的事情，而學校裡仍有人知道當年的真相。玩家的調查順序、對角色的選擇以及關鍵對話都會影響最後能夠揭開多少秘密。最終，你必須決定是否公開真相，以及是否願意承擔揭露真相後可能失去某些重要關係的代價。",
+    "tags": [
+      "Story Rich",
+      "Detective",
+      "Choice Driven",
+      "Relationship System",
+      "Romance"
+    ],
+    "screenshots": [
+      "/games/midnight-letters-01.jpg",
+      "/games/midnight-letters-02.jpg",
+      "/games/midnight-letters-03.jpg"
+    ],
+    "status": ["new", "featured"]
+  },
+  {
+    "id": 30,
+    "title": "Silent Meridian",
+    "titleZh": "寂靜子午線",
+    "cover": "/games/silent-meridian-cover.jpg",
+    "banner": "/games/silent-meridian-banner.jpg",
+    "genre": ["Stealth", "Action", "Strategy"],
+    "price": 1090,
+    "rating": 4.8,
+    "releaseDate": "2026-09-30",
+    "developer": "Northline Intelligence",
+    "publisher": "Northline",
+    "description": "率領一支秘密特工小隊執行高風險潛入任務，蒐集機密情報、癱瘓敵方設施並在不被發現的情況下改變全球局勢。",
+    "detailDescription": "在一場即將爆發的全球危機中，各國政府都否認自己掌握了任何相關情報，只有一個不存在於官方紀錄中的秘密特工組織正在暗中調查事件真相。玩家將負責指揮這支小隊，從世界各地接手高風險的情報任務。每次任務開始前，你都需要根據目標地點、敵方配置與任務要求選擇適合的特工，並規劃潛入路線與行動方式。不同特工擁有不同專長，有人擅長駭入安全系統，有人可以進行遠距離支援，也有人專門負責近距離潛入。進入任務區域後，玩家可以觀察敵人的巡邏路線、關閉監視設備、利用環境製造干擾，甚至偽裝身分取得受限制區域的情報。大部分任務都不存在唯一解法，你可以選擇完全不被發現地完成目標，也可以在行動失敗後改用直接戰鬥的方式突破。隨著任務進行，小隊將逐漸取得更多機密情報，並發現不同國家與組織其實都被捲入同一場全球性的秘密計畫。玩家的任務選擇、情報處理方式與特工配置都會影響後續事件，部分任務甚至可能因為先前的決定而產生完全不同的結果。當所有線索最終指向同一個核心計畫時，你必須決定是否揭露真相，以及這支不存在於官方紀錄中的特工小隊，究竟應該拯救世界，還是利用這場危機改變世界的權力平衡。",
+    "tags": [
+      "Stealth",
+      "Tactical Combat",
+      "Detective",
+      "Story Rich",
+      "Choice Driven"
+    ],
+    "screenshots": [
+      "/games/silent-meridian-01.jpg",
+      "/games/silent-meridian-02.jpg",
+      "/games/silent-meridian-03.jpg"
+    ],
+    "status": ["new", "bestseller"]
+  }
+]

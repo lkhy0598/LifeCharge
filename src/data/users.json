@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "username": "alex",
+    "email": "alex@example.com",
+    "password": "123456",
+    "displayName": "Alex Chen",
+    "avatar": "/src/assets/images/usersDataWebp/1/user1.webp",
+    "purchasedGames": [1, 2, 6, 10, 15]
+  },
+  {
+    "id": 2,
+    "username": "emma",
+    "email": "emma@example.com",
+    "password": "123456",
+    "displayName": "Emma Lin",
+    "avatar": "/src/assets/images/usersDataWebp/2/user2.webp",
+    "purchasedGames": [4, 5, 14, 18, 20]
+  },
+  {
+    "id": 3,
+    "username": "ryan",
+    "email": "ryan@example.com",
+    "password": "123456",
+    "displayName": "Ryan Wang",
+    "avatar": "/src/assets/images/usersDataWebp/3/user3.webp",
+    "purchasedGames": [3, 7, 11, 16, 22, 26]
+  },
+  {
+    "id": 4,
+    "username": "sophia",
+    "email": "sophia@example.com",
+    "password": "123456",
+    "displayName": "Sophia Wu",
+    "avatar": "/src/assets/images/usersDataWebp/4/user4.webp",
+    "purchasedGames": [8, 9, 12, 19]
+  },
+  {
+    "id": 5,
+    "username": "kevin",
+    "email": "kevin@example.com",
+    "password": "123456",
+    "displayName": "Kevin Huang",
+    "avatar": "/src/assets/images/usersDataWebp/5/user5.webp",
+    "purchasedGames": [13, 17, 21, 23, 25, 28]
+  },
+  {
+    "id": 6,
+    "username": "mia",
+    "email": "mia@example.com",
+    "password": "123456",
+    "displayName": "Mia Chang",
+    "avatar": "/src/assets/images/usersDataWebp/6/user6.webp",
+    "purchasedGames": []
+  }
+]

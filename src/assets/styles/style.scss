@@ -1,0 +1,103 @@
+@use "./breakpoints" as bp;
+
+/* ========================================
+   1. 全域設計變數
+======================================== */
+
+:root {
+  --color-background: #f3f0e8;
+  --color-secondary: #e4ded2;
+  --color-primary: #d94b39;
+  --color-text: #242321;
+  --color-muted: #6b625a;
+  --color-border: #d5cdc0;
+
+  --content-max-width: 1536px;
+}
+
+/* ========================================
+   2. 全域基礎設定
+======================================== */
+
+html {
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+}
+
+// 鎖定背景捲動時仍保留捲軸欄位，避免固定導覽列的可用寬度改變。
+html.v-overlay-scroll-blocked {
+  overflow-y: scroll;
+  padding-inline-end: 0;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: Arial, "Noto Sans TC", sans-serif;
+}
+
+.v-application {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: Arial, "Noto Sans TC", sans-serif;
+  line-height: 1.5;
+}
+
+.v-card,
+.v-navigation-drawer,
+.v-sheet {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+.search-select-menu {
+  .v-list {
+    background-color: #fff;
+    color: var(--color-text);
+    // 捲軸滑塊顏色、軌道顏色
+    scrollbar-color: var(--color-border) #fff;
+    scrollbar-width: thin;
+  }
+  .v-list-item:hover {
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
+  }
+
+  // 移除內建 hover 遮罩，避免顏色疊加
+  .v-list-item:hover > .v-list-item__overlay {
+    opacity: 0;
+  }
+
+  // 選中項目的外觀
+  .v-list-item--active {
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
+  }
+
+  // 移除選中遮罩，避免疊色
+  .v-list-item--active > .v-list-item__overlay {
+    opacity: 0;
+  }
+}
+
+/* ========================================
+   3. 全域共用容器
+======================================== */
+
+.page-container {
+  width: 80%;
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+
+  @include bp.laptop {
+    width: calc(100% - 64px);
+  }
+
+  @include bp.tablet {
+    width: calc(100% - 48px);
+  }
+
+  @include bp.mobile {
+    width: calc(100% - 32px);
+  }
+}

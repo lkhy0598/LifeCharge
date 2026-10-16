@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import { useAuthStore } from '../stores/authStore'
 const Home = () => import('../views/Home.vue')
 const SearchResults = () => import('../views/SearchResults.vue')
@@ -37,7 +37,7 @@ const routes = [
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(import.meta.env.BASE_URL),
     routes,
     scrollBehavior(to, from, savedPosition) {
         if (savedPosition) {

@@ -4,23 +4,9 @@ declare(strict_types=1);
 
 ini_set('display_errors', '0');
 
-header('Content-Type: application/json; charset=utf-8');
-header('Cache-Control: no-store');
+require_once dirname(__DIR__, 2) . '/src/request.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    http_response_code(405);
-    header('Allow: GET');
-
-    echo json_encode([
-        'ok' => false,
-        'error' => [
-            'code' => 'METHOD_NOT_ALLOWED',
-            'message' => '此端點只接受 GET 請求。',
-        ],
-    ], JSON_UNESCAPED_UNICODE);
-
-    exit;
-}
+requireRequestMethod('GET');
 
 try {
     require_once dirname(__DIR__, 2) . '/src/database.php';
@@ -86,18 +72,11 @@ try {
         $games[] = $row;
     }
 
-    echo json_encode([
-        'ok' => true,
-        'data' => $games,
-    ], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+    sendSuccess($games);
 } catch (Throwable $error) {
-    http_response_code(503);
-
-    echo json_encode([
-        'ok' => false,
-        'error' => [
-            'code' => 'GAMES_UNAVAILABLE',
-            'message' => '遊戲資料暫時無法載入。',
-        ],
-    ], JSON_UNESCAPED_UNICODE);
+    sendError(
+        'GAMES_UNAVAILABLE',
+        '遊戲資料暫時無法載入。',
+        503
+    );
 }

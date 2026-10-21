@@ -180,7 +180,7 @@ LifeCharge/
 
 第 3 節的 V1 唯讀盤點已完成，使用者接著確認了資料表與主要 API 規則，整理於第 10 節。
 
-**目前進度：Phase 1～4 已完成先前驗收；Phase 5 會員 API、雙模式 authStore、登入／註冊視窗及購物車暫存隔離已完成本輪獨立驗收。** 三個 Store 已提供模式初始化，但正式 main.js 仍沿用 Demo，尚未接上自動模式判斷、啟動畫面或完整 Database 頁面／購買流程。此次文件更新不代表批准 Phase 6；後續仍須按使用者授權逐階段進行，不自行安裝、執行資料庫變更、提交或推送 Git。
+**目前進度：Phase 1～5 已完成先前驗收；使用者已授權繼續 Phase 6，確認初步範圍後，先要求整理既有 PHP 重複邏輯。** 去重整理及會員回歸已完成本輪確認，尚未建立報價／訂單 API。三個 Store 已提供模式初始化，但正式 main.js 仍沿用 Demo，尚未接上自動模式判斷、啟動畫面或完整 Database 頁面／購買流程。後續沿已授權範圍逐步進行，不自行安裝、執行資料庫結構變更、提交或推送 Git。
 
 ## 10. 使用者已確認的整合設計（2026-10-21）
 
@@ -467,7 +467,7 @@ Service 負責 JSON/API 的讀寫、格式與型別整理；Store 保存畫面�
 
 ### 10.14 Phase 5 實際進度與驗收範圍
 
-- 新增 backend/config/app.php、src/session.php、response.php、csrf.php、request.php、user.php、validation.php、rateLimit.php；逐支 PHP 的職責、呼叫關係及資料庫操作已整理在 README「PHP 檔案分工」。config/database.local.php 仍不提交 Git，不公開帳密。
+- Phase 5 原新增 backend/config/app.php、src/session.php、response.php、csrf.php、request.php、user.php、validation.php、rateLimit.php；後續去重已將 validation.php 併入 user.php，現況以第 10.15 節及 README「PHP 檔案分工」為準。config/database.local.php 仍不提交 Git，不公開帳密。
 - 新增 GET /api/csrf、GET /api/me、POST /api/login、POST /api/logout、POST /api/register，Vite proxy 已轉送對應 PHP。會員回應僅包含 id、username、email、displayName、avatar、purchasedGames，不含密碼雜湊。
 - 註冊單一交易新增 users，使用 usersDataWebp/default.webp，自動登入且無初始遊戲；不建立訂單或擁有權。唯一約束拒絕重複帳號／Email，回 409／ACCOUNT_EXISTS。本輪未改 schema 或重新匯入 seed，註冊測試另新增會員，users=6 僅代表初始匯入狀態。
 - 密碼使用 PASSWORD_BCRYPT，新密碼至少 8 字元、最多 72 bytes，不含空白及空字元；舊會員登入不套用 8 字元下限。確認密碼不送 API；後端驗證失敗回 400／VALIDATION_FAILED 與 fields。JSON 媒體型別／過大內容另回 415／413。
@@ -483,3 +483,14 @@ Service 負責 JSON/API 的讀寫、格式與型別整理；Store 保存畫面�
 - 10 秒過期測試已通過並恢復 1800，修正設定缺逗號後恢復正常；已登入時停止 MySQL 得到 503／MEMBER_UNAVAILABLE，不誤判登出，服務恢復後查回原會員。
 - 已確認 Service／Store、Database 視窗註冊／目的地、Demo 回歸及 otherCartUnchanged；CSRF 恢復的已登入／未登入兩案例均 passed true，login=1、me=1、csrf=2，isBusy 恢復 false。身份變更、恢復失敗及完整購物車新增／移除／重載的自動測試矩陣尚未各自建立。
 - 正式建置通過；後續仍須保留語法檢查。main.js 未修改，正式入口仍 Demo，尚未驗收完整 Database 導覽／真結帳頁。自動模式、三秒啟動畫面與重試介面仍待整合；Phase 6 報價／訂單／冪等查詢與持久化尚未開始。
+
+### 10.15 PHP 去重整理與 Phase 6 銜接
+
+- 使用者在 Phase 6 初步建立 auth.php 後，要求先檢視並整理重複功能。沿用現有架構，不引入框架或額外 bootstrap 檔案，不修改資料表與 API 網址。
+- backend/src/ 保留七支：database.php、response.php、request.php、session.php、csrf.php、user.php、rateLimit.php。auth.php 的要求登入／確認會員存在邏輯搬至 user.php；validation.php 的註冊驗證也併入 user.php，兩個檔案均已移除且無程式引用。
+- me.php 先 requireMemberId() 再連 DB，之後使用 requireAuthenticatedMember(PDO)，保留原本未登入優先 401 的行為。共同會員查詢仍不延長活動時間。
+- prepareMemberSession() 集中 token、session ID 更新與身份資料準備；登入套用回傳資料，註冊先準備、成功提交交易後才指定 $_SESSION，不在 commit 前建立新會員登入身份。
+- 七個 API 共用 requireRequestMethod() 與 JSON 回應工具；health／games 查詢保持原樣，僅統一方法檢查及輸出方式。保留 CSRF 與限流的獨立職責，不為減少檔案將所有 API 合併。
+- 已執行 14 支 PHP 語法檢查，使用者確認會員查詢、登入／登出、錯誤 CSRF、405 及 Allow 標頭、搬移後重複註冊拒絕與 session 共用後註冊成功。最後 health／games 輸出尚未另貼獨立驗收結果，不將語法檢查當成所有端點功能測試。
+- 使用者接受會員 AUTO_INCREMENT 可有空號，不新增連號機制、不重排主鍵；測試註冊會新增會員，重複插入失敗可能消耗 ID。
+- Phase 6 調整為先用一支 src/checkout.php 管理報價與訂單邏輯，不預先拆 orders.php；會員驗證沿用 user.php，不重新建立 auth.php。後續仍需商品驗證、整數分金額、交易、冪等與斷線查詢等原驗收要求，尚未開始購買 API 實作。

@@ -4,17 +4,9 @@ declare(strict_types=1);
 
 ini_set('display_errors', '0');
 
-require_once dirname(__DIR__, 2) . '/src/response.php';
+require_once dirname(__DIR__, 2) . '/src/request.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Allow: POST');
-
-    sendError(
-        'METHOD_NOT_ALLOWED',
-        '此端點只接受 POST 請求。',
-        405
-    );
-}
+requireRequestMethod('POST');
 
 try {
     require_once dirname(__DIR__, 2) . '/src/request.php';

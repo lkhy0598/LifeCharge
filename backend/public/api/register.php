@@ -4,17 +4,9 @@ declare(strict_types=1);
 
 ini_set('display_errors', '0');
 
-require_once dirname(__DIR__, 2) . '/src/response.php';
+require_once dirname(__DIR__, 2) . '/src/request.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Allow: POST');
-
-    sendError(
-        'METHOD_NOT_ALLOWED',
-        '此端點只接受 POST 請求。',
-        405
-    );
-}
+requireRequestMethod('POST');
 
 $pdo = null;
 
@@ -23,7 +15,6 @@ try {
     require_once dirname(__DIR__, 2) . '/src/csrf.php';
     require_once dirname(__DIR__, 2) . '/src/database.php';
     require_once dirname(__DIR__, 2) . '/src/user.php';
-    require_once dirname(__DIR__, 2) . '/src/validation.php';
     require_once dirname(__DIR__, 2) . '/src/rateLimit.php';
 
     requireAllowedOrigin();
@@ -37,7 +28,6 @@ try {
         PASSWORD_BCRYPT
     );
 
-    $newToken = bin2hex(random_bytes(32));
     $now = gmdate('Y-m-d H:i:s');
 
     $pdo = connectDatabase();
@@ -80,17 +70,12 @@ try {
         throw new RuntimeException('Created user could not be loaded.');
     }
 
-    if (!session_regenerate_id(true)) {
-        throw new RuntimeException('Session could not be renewed.');
-    }
+    $newSession = prepareMemberSession($userId);
 
     $pdo->commit();
 
-    $_SESSION = [
-        'user_id' => $userId,
-        'last_activity' => time(),
-        'csrf_token' => $newToken,
-    ];
+    // 資料庫交易成功後，才套用新會員身份。
+    $_SESSION = $newSession;
 
     sendSuccess($user, 201);
 } catch (Throwable $error) {

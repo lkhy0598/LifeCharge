@@ -79,3 +79,25 @@ function touchAppSession(): void
         $_SESSION['last_activity'] = time();
     }
 }
+
+function prepareMemberSession(int $userId): array
+{
+    if ($userId <= 0) {
+        throw new InvalidArgumentException('Invalid member ID.');
+    }
+
+    startAppSession();
+
+    $token = bin2hex(random_bytes(32));
+
+    if (!session_regenerate_id(true)) {
+        throw new RuntimeException('Session could not be renewed.');
+    }
+
+    // 只準備新身份資料，由呼叫端決定何時套用。
+    return [
+        'user_id' => $userId,
+        'last_activity' => time(),
+        'csrf_token' => $token,
+    ];
+}

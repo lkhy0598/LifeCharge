@@ -83,3 +83,18 @@ function readJsonBody(): array
 
     return get_object_vars($data);
 }
+
+function requireRequestMethod(string $method): void
+{
+    if (($_SERVER['REQUEST_METHOD'] ?? '') === $method) {
+        return;
+    }
+
+    header('Allow: ' . $method);
+
+    sendError(
+        'METHOD_NOT_ALLOWED',
+        "此端點只接受 {$method} 請求。",
+        405
+    );
+}

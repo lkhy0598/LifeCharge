@@ -4,17 +4,9 @@ declare(strict_types=1);
 
 ini_set('display_errors', '0');
 
-require_once dirname(__DIR__, 2) . '/src/response.php';
+require_once dirname(__DIR__, 2) . '/src/request.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Allow: POST');
-
-    sendError(
-        'METHOD_NOT_ALLOWED',
-        '此端點只接受 POST 請求。',
-        405
-    );
-}
+requireRequestMethod('POST');
 
 try {
     require_once dirname(__DIR__, 2) . '/src/request.php';
@@ -90,19 +82,7 @@ try {
         );
     }
 
-    // 先產生新 token，再更新登入 session。
-    $newToken = bin2hex(random_bytes(32));
-
-    if (!session_regenerate_id(true)) {
-        throw new RuntimeException('Session could not be renewed.');
-    }
-
-    // 清除先前身份可能留下的資料，例如未來的結帳報價。
-    $_SESSION = [
-        'user_id' => $user['id'],
-        'last_activity' => time(),
-        'csrf_token' => $newToken,
-    ];
+    $_SESSION = prepareMemberSession($user['id']);
 
     sendSuccess($user);
 } catch (Throwable $error) {

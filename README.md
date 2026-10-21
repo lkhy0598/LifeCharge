@@ -371,12 +371,11 @@ Phase 4 已由使用者提交與推送；後續 Phase 5 實作及驗收如下。
 | `config/database.example.php` | 提供可提交 Git 的連線範本 | 無 |
 | `config/database.local.php` | 本機私有連線設定，由 database.php 讀取；不提交 Git | 僅保存設定 |
 | `src/database.php` | connectDatabase() 建立 PDO，供端點及 seed 使用 | 建立連線 |
-| `src/session.php` | appConfig()、啟動 session、檢查過期、提供更新活動時間工具 | 無，操作 PHP session |
+| `src/session.php` | appConfig()、啟動 session、檢查過期、準備登入 session 資料及提供活動時間工具 | 無，操作 PHP session |
 | `src/response.php` | sendSuccess()／sendError() 輸出統一 JSON 並結束請求 | 無 |
 | `src/csrf.php` | 產生、取得與驗證 CSRF token，供 csrf 及 POST 端點使用 | 無，操作 PHP session |
-| `src/request.php` | 驗證 Origin、讀取最多 16 KiB 的 JSON 物件 | 無 |
-| `src/user.php` | 查詢公開會員與擁有權，或供登入驗證使用的密碼雜湊；後者不回傳前端 | 唯讀 |
-| `src/validation.php` | 驗證註冊欄位，回傳欄位錯誤 | 無 |
+| `src/request.php` | 統一 HTTP 方法檢查、驗證 Origin、讀取最多 16 KiB 的 JSON 物件 | 無 |
+| `src/user.php` | 會員查詢、要求登入、確認會員存在及註冊欄位驗證；密碼雜湊僅供後端登入比對 | 查詢部分唯讀；欄位驗證不查 DB |
 | `src/rateLimit.php` | 依操作及 REMOTE_ADDR 計數，以檔案鎖保護限流紀錄 | 無，寫入 storage/rate-limits |
 | `public/api/health.php` | 檢查 DB、必要欄位及初始遊戲是否就緒 | 唯讀 |
 | `public/api/games.php` | 取得遊戲清單並轉換回應型別 | 唯讀 |
@@ -467,7 +466,21 @@ Vite dev 將 `/api/csrf`、`/api/me`、`/api/login`、`/api/logout`、`/api/regi
 
 正式入口自動模式判斷、三秒啟動畫面與必要資料等待、初始化重試介面、完整 Database 頁面整合仍待處理；Database 報價、訂單、購買結果查詢與持久化屬 Phase 6，尚未實作。購買的 CSRF 恢復還需先查原 requestKey，不可直接套用會員操作重送。頭像上傳、驗證信、忘記密碼及管理後台不在本階段。
 
-本輪不變更資料表、不重新執行 seed、不自行提交或推送 Git。Phase 6 開始前仍須列出範圍並取得階段授權。
+本輪不變更資料表、不重新執行 seed、不自行提交或推送 Git。Phase 6 已確認初步範圍，購買功能實作前先完成下列 PHP 去重整理。
+
+## PHP 去重整理（Phase 5 後）
+
+依使用者要求，先降低重複邏輯及過細的工具檔拆分，再繼續購買功能。目前 `backend/src/` 共七支工具：database、response、request、session、csrf、user、rateLimit。
+
+- 會員驗證集中於 user.php：requireMemberId() 先檢查 session，requireAuthenticatedMember(PDO) 再確認資料庫中會員存在。me.php 先執行前者，再連 DB，保留未登入時優先回 401 的順序。
+- validateRegistration() 從 validation.php 搬至 user.php，register.php 改用既有 user.php；validation.php 已移除。Phase 6 初步建立的 auth.php 已併入 user.php 並移除，沒有成為新的長期工具檔。
+- session.php 的 prepareMemberSession() 產生 token、更新 session ID 並回傳新身份資料，但不自行指定 $_SESSION。login.php 直接套用；register.php 先準備、成功 commit 後才套用，保留交易失敗不切換身份的行為。
+- request.php 新增 requireRequestMethod()，七個現有 API 全部共用方法檢查。health.php、games.php 也改用 response.php，不再自行組成功／失敗 JSON。
+- 不合併瀏覽器 API 入口與內部工具；保留現有網址、回應格式、錯誤碼與資料表。後續報價／訂單邏輯先集中於一支 checkout.php，不預先拆出 orders.php；有實際需要再拆分。
+- 已完成七支工具與七支 API 共 14 支 PHP 的語法檢查；使用者確認 me 查詢、登入／登出、錯誤 CSRF、405／Allow 標頭及整理後註冊成功分支正常。登入／註冊的 session 與 token 行為維持原契約。health／games 的 SQL 未修改；最後一次重構後的 health ready 與遊戲 Store 結果尚未另貼獨立驗收輸出。
+- 整理過程未執行 schema／seed；使用者依測試步驟另新增註冊測試會員。AUTO_INCREMENT 因重複插入失敗或交易回滾可能跳號，ID 不要求連續，不重排既有編號。
+
+目前尚未實作 Phase 6 報價或訂單 API。先保存這輪整理紀錄，再延續已授權的 Phase 6 範圍；不因整理完成而宣稱購買持久化已完成。
 
 ## 建置與部署
 

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>Phase 3 模式測試</title>
+</head>
+<body>
+    <h1>模式判斷測試</h1>
+    <pre id="result">正在檢查後端…</pre>
+
+    <script type="module">
+        import { createPinia } from 'pinia'
+        import { useSystemStore } from '../../src/stores/systemStore.js'
+
+        const system = useSystemStore(createPinia())
+        const output = document.querySelector('#result')
+        const startedAt = performance.now()
+
+        // 同時呼叫兩次，應共用同一個檢查。
+        const first = system.initialize()
+        const second = system.initialize()
+
+        try {
+            await Promise.all([first, second])
+
+            output.textContent = JSON.stringify({
+                mode: system.mode,
+                status: system.status,
+                demoReason: system.demoReason,
+                elapsedMs: Math.round(performance.now() - startedAt),
+            }, null, 2)
+        } catch (error) {
+            output.textContent = JSON.stringify({
+                status: system.status,
+                error: system.initializationError,
+            }, null, 2)
+        }
+    </script>
+</body>
+</html>

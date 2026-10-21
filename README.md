@@ -4,14 +4,14 @@ Vue 遊戲商城作品。V1 已完成；V2 正在加入 PHP API 與 MySQL。
 
 ## 目前進度
 
-Phase 2：資料表與初始資料匯入已完成。
+Phase 3：模式判斷基礎模組已完成獨立測試，尚未接入網站。
 
 - 已建立五張資料表。
 - 已匯入 30 款遊戲、6 位測試會員及 26 筆初始擁有權。
 - 初始會員密碼以雜湊保存，未建立虛構訂單。
 - 已驗證重複匯入不重複新增。
 - 前端仍使用 JSON 與 sessionStorage，尚未串接資料庫。
-- 尚未加入自動模式判斷。
+- 自動模式判斷目前只在獨立測試頁運作；正式網站入口尚未使用。
 - 所有付款均為模擬。
 
 ## 本機環境
@@ -89,12 +89,16 @@ http://localhost:8080/lifecharge-backend/api/health.php
 ## 健康檢查結果
 
 - 連線成功：ok 為 true，databaseConnected 為 true。
-- `ready` 目前固定為 `false`；資料已匯入，但 health 尚未實作資料表與初始遊戲的完整就緒檢查。
+- 驗證連線資料庫為 `lifecharge`，並查驗五張表的必要欄位。
+- 初始遊戲 ID 1～30 均存在時，`ready` 為 `true`；缺少遊戲時為 `false`。
+- 資料表或必要欄位不存在時，由 API 回傳受控的 HTTP 503 錯誤。
 - MySQL 停止：PHP 回傳 HTTP 503 與 BACKEND_UNAVAILABLE。
 - Apache 停止：proxy 無法取得後端回應，可能顯示 502。
 - 服務重新啟動後應恢復正常。
 
-測試只執行 SELECT 1，不建立或修改資料。
+health 僅執行唯讀查詢，不建立或修改資料，也不輸出會員資料。
+它目前沒有逐筆驗證所有遊戲內容、索引／約束或重新掃描媒體檔案。
+`ready: true` 表示本階段的資料檢查通過，不表示遊戲、會員及購買 API 已全部完成。
 
 ## 資料庫初始化
 
@@ -222,8 +226,91 @@ UNION ALL
 SELECT 'order_items', COUNT(*) FROM lifecharge.order_items;
 ```
 
-health 仍只執行連線檢查，不能僅因已匯入就將 `ready` 手動改成 `true`。
-完整就緒檢查與前端自動模式判斷留待後續階段實作。
+Phase 2 完成時 health 僅驗證連線；Phase 3 已加入表結構及初始遊戲檢查，
+由查詢結果決定 `ready`，不手動寫死為 `true`。
+
+## Phase 3：模式判斷基礎模組
+
+| 檔案 | 職責 |
+|---|---|
+| `src/config/system.js` | 啟動畫面最短時間與 health 逾時設定 |
+| `src/services/apiClient.js` | GET 請求、JSON 回應驗證、逾時及錯誤分類 |
+| `src/services/healthService.js` | 驗證服務識別、API 版本及就緒旗標 |
+| `src/stores/systemStore.js` | 單次初始化的模式判斷與狀態管理 |
+
+目前僅在獨立測試頁使用，尚未接入 `main.js`、既有遊戲／會員／購物車 Store。
+正常網站仍使用 V1 Demo；測試頁顯示 Database 不代表網站已串接 Database。
+
+### 模式與錯誤規則
+
+- 目前正式建置（包含 preview 與 GitHub Pages）固定 Demo，不探測本機後端。
+- Vite 開發環境呼叫 `/api/health`；只有服務識別、版本、格式與資料就緒狀態均符合才判定 Database。
+- 啟動時未就緒、後端連線失敗、逾時或無效 health 回應會判定 Demo。
+- HTTP 400、401、403、409、429 會進入錯誤狀態，不當成後端離線而降級。
+- 模式決定後不持續自動切換；同次初始化的後續呼叫共用內部工作，不重複發送 health 請求。
+- `status: ready` 僅代表模式判斷完成，不代表遊戲、會員及購物車初始化完成。
+- `status: error` 且 `mode: checking` 代表判斷被錯誤中止，並非仍在背景持續請求。
+
+### 開發環境測試
+
+啟動 Vite，開啟以下測試頁；連接埠依實際輸出調整：
+
+| 網址 | 用途 |
+|---|---|
+| `http://localhost:5173/LifeCharge/test/phase3/index.html` | 使用實際後端測模式判斷 |
+| `http://localhost:5173/LifeCharge/test/phase3/errors.html` | 模擬 401／403／409 |
+| `http://localhost:5173/LifeCharge/test/phase3/timeout.html` | 模擬無回應，驗證 3 秒逾時 |
+
+錯誤與逾時頁只在各自頁面暫時替換 fetch，測完恢復，不改動後端或資料庫。
+目前已人工驗證：
+
+| 情境 | 結果 |
+|---|---|
+| 後端與 DB 正常 | `database`，無 Demo 原因 |
+| MySQL 停止 | `demo / BACKEND_UNAVAILABLE` |
+| Apache 停止 | `demo / HTTP_ERROR` |
+| 服務重啟並重新整理 | 恢復 `database` |
+| 模擬無回應 | 約 3 秒後 `demo / TIMEOUT` |
+| 模擬 401／403／409 | `error`，三個案例通過，不降級 |
+| 同時呼叫兩次初始化 | Network 僅一筆 health fetch |
+| 正式測試建置 | `demo / static-build` |
+
+Pinia 會包裝 action 回傳的 Promise，因此不能用兩次呼叫結果的
+`first === second` 作為是否重複請求的驗收標準；以實際請求數確認。
+
+### 正式環境測試建置
+
+一般網站建置不包含上述獨立測試頁。另用測試設定執行：
+
+```powershell
+npm.cmd exec -- vite build --config test/phase3/vite.config.js
+npm.cmd exec -- vite preview --outDir dist/phase3-check --port 4174 --strictPort
+```
+
+開啟：
+
+```text
+http://localhost:4174/LifeCharge/test/phase3/index.html
+```
+
+應顯示 `demo / static-build`；在 Network 的 Fetch/XHR 篩選確認不發出 health 請求。
+產物放在已忽略的 `dist/phase3-check`，不需要提交 Git。
+一般 `npm.cmd run build` 會清理 `dist`，測試產物需要時重新產生。
+
+### 已確認、尚未接入的啟動與暫存設計
+
+- 啟動畫面最短時間由 `STARTUP_MIN_DURATION_MS` 設定，預設 3000ms，之後可調整。
+- health 請求逾時由 `HEALTH_CHECK_TIMEOUT_MS` 設定，預設 3000ms，兩者獨立。
+- 啟動畫面計時與背景初始化同時開始，不先後累加。
+- 顯示「正在判斷運作模式…」及 Demo／Database 的說明；判定後顯示對應模式與載入狀態。
+- 公開靜態版本直接顯示 Demo，不假裝探測 Database。
+- 最短顯示時間已滿且必要資料就緒，才進入網站；資料失敗顯示錯誤與重試，不因時間已滿就放行。
+- 不新增通用 `storage.js`。後續由 cartStore 根據固定模式選擇 key：Demo 為 `lifecharge-cart`，Database 為 `lifecharge-database-cart`。
+- Demo 的既有登入與購買 keys 保留；Database 身份及擁有權由後端提供，不互相搬移或合併。
+- 目前未修改原有 Store 或實作上述啟動畫面，不宣稱已完成實際購物車隔離。
+
+正式模式的遊戲、會員與購買服務仍待 Phase 4～6 完成；
+未完成的 Database 服務不可用 Demo 身份或購買流程冒充。
 
 ## 建置與部署
 

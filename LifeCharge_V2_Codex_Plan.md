@@ -180,7 +180,7 @@ LifeCharge/
 
 第 3 節的 V1 唯讀盤點已完成，使用者接著確認了資料表與主要 API 規則，整理於第 10 節。
 
-**目前只獲准整理規格文件，尚未獲准開始 Phase 1。** 不安裝套件或環境、不修改應用程式、不建立資料庫、不提交或推送 Git。後續須由使用者明確批准個別 Phase 才開始實作。
+**目前進度：Phase 1、Phase 2 已由使用者逐步完成並提交至 feature/v2；Phase 3 的模式判斷基礎模組正在獨立驗收與文件收尾。** 目前網站入口仍使用 V1 Demo，尚未接入正式資料庫模式、啟動畫面或改動既有三個 Store。此次文件更新不代表批准 Phase 4；後續仍須按使用者授權逐階段進行，不自行安裝、執行資料庫變更、提交或推送 Git。
 
 ## 10. 使用者已確認的整合設計（2026-10-21）
 
@@ -226,8 +226,8 @@ Service 負責 JSON/API 的讀寫、格式與型別整理；Store 保存畫面�
 - `GET /api/games` 一次回傳完整 30 款，前端繼續搜尋、分類、排序及依 ID 查詳細資料。
 - 回應使用既有 camelCase 欄位；ID、price、rating 為數字，多值欄位為陣列，releaseDate 為日期字串。
 - Database 模式由後端提供圖片；Demo 保留 `src/assets` 與既有 ID/glob 讀取方式。
-- 既有圖片複製到後端公開媒體目錄，不移除原資產。建議結構：`backend/public/api/`、`backend/public/media/`；連線設定放在公開根目錄外。
-- DB 儲存 `games/game01/game01_cover.webp` 等相對路徑，不存磁碟絕對路徑、localhost、連接埠或 Vite 雜湊檔名。
+- 既有圖片複製到後端公開媒體目錄，不移除原資產。實際結構為 `backend/public/api/`、`backend/public/media/`；連線設定放在公開根目錄外。
+- 使用者決定保留資料夾名稱 `gameDataWebp`、`usersDataWebp`；DB 儲存 `gameDataWebp/game01/game01_cover.webp`、`usersDataWebp/1/user1.webp` 等相對路徑，不存磁碟絕對路徑、localhost、連接埠或 Vite 雜湊檔名。新會員預設頭像為 `usersDataWebp/default.webp`。
 - Service 依設定的媒體 Base URL 轉成可用網址，元件不自行判斷模式。新會員頭像同樣支援後端網址。
 - 初始截圖使用實際五張 WebP；原 games.json 的三張示意 JPG 路徑不得直接當成後端媒體資料。
 - Database 遊戲 API 失敗時顯示錯誤及重試，不混入 Demo 資料；圖片失敗保留區域並顯示失敗狀態，不偷偷換成 Demo 圖片。
@@ -405,7 +405,9 @@ Service 負責 JSON/API 的讀寫、格式與型別整理；Store 保存畫面�
 - Phase 3 只驗收模式與 Service/啟動骨架；games、auth 尚未完成時，不宣稱完整 Database 可用，不用 Demo 身份冒充正式會員。
 - Phase 4 加入後端遊戲媒體提供與前端圖片解析適配；Phase 5 加入預設頭像與完整認證；Phase 6 加入報價、訂單、擁有權與冪等處理。
 - 每階段開始前仍須列出確切檔案、風險、回退與驗收，取得該階段授權；不得自行進入下一階段。
-- 尚未選定：PHP/DB 安裝方式與版本、連接埠、具體 proxy/media URL、環境設定檔格式。使用者目前未安裝資料庫。
+- 已選定並驗證：XAMPP Apache/PHP 8.2.12 搭配獨立 MySQL 8.4.13；Apache 使用 8080，MySQL 使用 3306，不使用 XAMPP MariaDB。MySQL Windows 服務為 MySQL84，圖形管理工具為 Workbench。
+- 本機私有設定為 `backend/config/database.local.php`，已忽略且不提交 Git；連線到 lifecharge 的專用帳號為 lifecharge_app，限本機與 SELECT/INSERT/UPDATE。設定範本不保存真實憑證。
+- Apache `/lifecharge-backend/` 僅對應 `backend/public/`，限制本機存取；Vite `/api/health` 轉送至 Apache `/lifecharge-backend/api/health.php`。媒體 Base URL 為 `http://localhost:8080/lifecharge-backend/media/`，後續 Service 需集中管理，不寫死於資料庫。
 - 尚待實作前細化：密碼長度上限及 PHP 雜湊演算法相容性、session 與 CSRF 端點是否延長閒置期限、報價與 requestKey 的分頁恢復/保存及請求內容比對方式、錯誤碼完整列表與限流參數。不得當成已決定的功能任意擴張。
 - 頭像上傳需之後獨立批准；目前不增加上傳 API 或處理流程。
 
@@ -422,3 +424,28 @@ Service 負責 JSON/API 的讀寫、格式與型別整理；Store 保存畫面�
 - 註冊成功後自動登入，清理購物車中已擁有的遊戲，接續原目的地；無目的地則前往會員中心。
 - 手機維持單欄，視窗內容可上下捲動，確保關閉與送出操作可到達。
 - 隱藏入口不取代後端註冊驗證。此項在 Phase 5 實作，更新本文件不代表已批准開始該階段。
+
+### 10.11 啟動畫面與簡化暫存方案（Phase 3 討論確認）
+
+- 使用者選擇啟動畫面最少顯示約 3 秒，同時進行模式判斷與資料初始化，不等畫面結束才載入。
+- `src/config/system.js` 的 `STARTUP_MIN_DURATION_MS` 與 `HEALTH_CHECK_TIMEOUT_MS` 分別預設 3000ms。顯示時間與請求逾時獨立設定，不累加等待。
+- 啟動顯示「正在判斷運作模式…」，說明 Demo 展示模式／Database 資料庫模式；完成判斷後顯示對應模式與載入進度。公開靜態建置固定 Demo，不假裝檢查本機服務。
+- 只有最短時間已滿、必要資料已就緒才顯示可操作畫面；資料較慢則繼續等待，失敗顯示錯誤與重試，不因滿 3 秒就直接放行。
+- 目前只建立時間設定，尚未實作畫面或整合 main.js。整合時必須等待遊戲、會員、購物車初始化，不可顯示 Database 卻使用 Demo 會員或購買資料。
+- 依使用者要求簡化：不新增通用 storage.js。後續直接由 cartStore 依模式選擇 `lifecharge-cart`（Demo）或 `lifecharge-database-cart`（Database）。
+- Demo 原登入與購買 keys 繼續保留；正式身份由 PHP session 驗證，正式擁有權從後端取得，不新增可冒充正式身份／擁有權的 sessionStorage 紀錄。
+- 兩種模式不搬移、不合併資料。不能假設重新整理會清除 sessionStorage；同分頁切換模式仍需使用獨立 key。關閉分頁或瀏覽器恢復分頁的行為不作安全依據。
+- 目前尚未修改既有 cartStore/authStore，暫存隔離是後續接入要求，不算已完成的功能或測試。
+
+### 10.12 Phase 1～3 實際進度與驗收範圍
+
+- Phase 1 已完成本機 PHP/Apache/MySQL、私有設定、PDO 連線、health 與 Vite proxy，包含停用／恢復服務的人工測試。
+- Phase 2 已完成 `database/schema.sql` 五張表、命令列 seed、後端圖片與預設頭像。初始筆數為 games 30、users 6、user_games 26、orders 0、order_items 0；重跑新增均為 0；六位會員的密碼雜湊驗證通過。
+- Phase 3 已新增 system 設定、apiClient、healthService、systemStore，僅由 `test/phase3/` 獨立測試頁使用，不影響正式網站入口。
+- health 現在驗證 lifecharge 資料庫、五張表必要欄位及初始遊戲 ID 1～30 是否齊全；資料未齊全時 ready 為 false，缺表／欄位等例外回傳 503。這不是所有資料內容、圖片或完整 API 功能的驗收。
+- 已人工測試正常 Database、MySQL 停止的 BACKEND_UNAVAILABLE、Apache 停止的 HTTP_ERROR、服務恢復、約 3 秒 TIMEOUT、401/403/409 不降級、兩次初始化只有一次實際 health fetch、正式測試建置為 static-build Demo。
+- 400/429 的處理分支已存在，但尚未獨立執行案例；ready false、錯誤版本／格式等分支也尚未逐一測試，不將其描述為全部通過。
+- Pinia 包裝 action Promise，外部 `first === second` 不適合作為重複請求測試；以 Network 實際 fetch 數量確認。
+- 測試目錄實際名稱是 `test/phase3/`（非 tests）；`vite.config.js` 測試設定輸出至 `dist/phase3-check`，正式網站的一般建置不包含測試頁。
+- 正式測試頁預期不發出 health；透過 Network Fetch/XHR 驗收。正式建置目前一律 Demo，未來其他正式 Database 部署另行設計，不把 DEV 當成資料庫可用性。
+- 完整前端 Database 資料、認證、購買流程仍待 Phase 4～6。後續各階段仍須獨立批准，不因基礎模式測試完成而跳階段。

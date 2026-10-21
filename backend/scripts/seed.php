@@ -481,7 +481,6 @@ try {
     if (isset($pdo) && $pdo->inTransaction()) {
         $pdo->rollBack();
     }
-    
     fwrite(
         STDERR,
         "預檢失敗，請確認連線、資料表、JSON 與圖片檔案。\n"

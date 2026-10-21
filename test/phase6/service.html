@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>購買 Service 測試</title>
+</head>
+<body>
+    <h1>購買 Service 測試</h1>
+
+    <p>
+        <label>
+            requestKey
+            <input id="request-key" size="45">
+        </label>
+        <button id="query">查詢訂單</button>
+    </p>
+
+    <p>
+        <label>
+            報價遊戲編號
+            <input id="game-ids" value="3">
+        </label>
+        <button id="quote">取得報價</button>
+    </p>
+
+    <pre id="result">正在確認會員…</pre>
+
+    <script type="module">
+        import { getApiJson } from '../../src/services/apiClient.js'
+        import {
+            findDatabasePurchase,
+            createDatabaseQuote,
+        } from '../../src/services/purchaseService.js'
+
+        const keyInput = document.querySelector('#request-key')
+        const idsInput = document.querySelector('#game-ids')
+        const output = document.querySelector('#result')
+        const buttons = document.querySelectorAll('button')
+
+        function show(value) {
+            output.textContent = JSON.stringify(value, null, 2)
+        }
+
+        async function run(action) {
+            buttons.forEach(button => button.disabled = true)
+
+            try {
+                await action()
+            } catch (error) {
+                show({
+                    code: error.code,
+                    status: error.status,
+                    message: error.message,
+                })
+            } finally {
+                buttons.forEach(button => button.disabled = false)
+            }
+        }
+
+        await run(async () => {
+            const member = await getApiJson('/api/me')
+
+            const saved = sessionStorage.getItem(
+                `lifecharge-phase6-purchase-test-${member.id}`
+            )
+
+            if (saved !== null) {
+                keyInput.value = JSON.parse(saved).requestKey
+            }
+
+            show({
+                memberId: member.id,
+                message: '可查詢既有訂單，或取得未擁有遊戲的報價。',
+            })
+        })
+
+        document.querySelector('#query')
+            .addEventListener('click', () => run(async () => {
+                const result = await findDatabasePurchase(
+                    keyInput.value.trim()
+                )
+
+                show({ result })
+            }))
+
+        document.querySelector('#quote')
+            .addEventListener('click', () => run(async () => {
+                const gameIds = idsInput.value.split(',')
+                    .map(value => Number(value.trim()))
+
+                const quote = await createDatabaseQuote(gameIds)
+
+                show({ quote })
+            }))
+    </script>
+</body>
+</html>

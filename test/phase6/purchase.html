@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>購買交易測試</title>
+</head>
+
+<body>
+    <h1>購買交易測試</h1>
+    <p>送出會寫入訂單與遊戲擁有權，沒有真實扣款。</p>
+
+    <p>
+        <label>
+            報價 quoteId
+            <input id="quote-id" size="70" autocomplete="off">
+        </label>
+    </p>
+
+    <p>requestKey：<code id="request-key">尚未建立</code></p>
+
+    <button id="purchase" disabled>確認模擬購買／使用原識別碼重送</button>
+    <button id="query" disabled>查詢原購買結果</button>
+    <p>
+        <button id="conflict" disabled>
+            測試原識別碼搭配不同商品
+        </button>
+        <button id="expiry" disabled>測試報價過期</button>
+        <button id="prepare-price" disabled>準備價格變動測試</button>
+        <button id="submit-price" disabled>送出價格變動測試</button>
+    </p>
+
+    <pre id="result">正在確認會員…</pre>
+
+    <script type="module">
+        import {
+            getApiJson,
+            postApiJson,
+        } from '../../src/services/apiClient.js'
+
+        const quoteInput = document.querySelector('#quote-id')
+        const keyOutput = document.querySelector('#request-key')
+        const purchase = document.querySelector('#purchase')
+        const query = document.querySelector('#query')
+        const output = document.querySelector('#result')
+        const conflict = document.querySelector('#conflict')
+        const expiry = document.querySelector('#expiry')
+        const preparePrice = document.querySelector('#prepare-price')
+        const submitPrice = document.querySelector('#submit-price')
+
+        let memberId
+        let storageKey
+        let state = null
+        let ready = false
+
+        function show(value) {
+            output.textContent = JSON.stringify(value, null, 2)
+        }
+
+        function updateControls(busy = false) {
+            purchase.disabled = busy || !ready
+            query.disabled = busy || !ready || state === null
+            conflict.disabled = busy || !ready || state === null
+            expiry.disabled = busy || !ready || state === null
+            preparePrice.disabled = busy || !ready || state === null
+            submitPrice.disabled = busy || !ready || state === null
+            quoteInput.disabled = busy || state !== null
+            keyOutput.textContent = state?.requestKey ?? '尚未建立'
+        }
+
+        function saveState() {
+            sessionStorage.setItem(storageKey, JSON.stringify(state))
+        }
+
+        async function checkIdentity() {
+            const member = await getApiJson('/api/me')
+
+            if (member.id !== memberId) {
+                throw new Error('登入身份已變更，請重新整理測試頁。')
+            }
+        }
+
+        function recordResult(data) {
+            const previousOrderId = state.orderId ?? null
+
+            state.orderId = data.order.orderId
+            saveState()
+
+            show({
+                ...data,
+                previousOrderId,
+                sameOrder: previousOrderId === null
+                    ? null
+                    : previousOrderId === data.order.orderId,
+            })
+        }
+
+        async function run(action) {
+            updateControls(true)
+
+            try {
+                await checkIdentity()
+                await action()
+            } catch (error) {
+                show({
+                    code: error.code,
+                    status: error.status,
+                    message: error.message,
+                    requestKey: state?.requestKey,
+                    reminder: '請保留原識別碼；結果不明時先查詢，不另建新購買。',
+                })
+            } finally {
+                updateControls()
+            }
+        }
+
+        try {
+            const member = await getApiJson('/api/me')
+            memberId = member.id
+            storageKey = `lifecharge-phase6-purchase-test-${memberId}`
+
+            const saved = sessionStorage.getItem(storageKey)
+
+            if (saved !== null) {
+                state = JSON.parse(saved)
+
+                if (
+                    !state
+                    || state.userId !== memberId
+                    || typeof state.quoteId !== 'string'
+                    || typeof state.requestKey !== 'string'
+                ) {
+                    throw new Error('測試暫存格式異常，請先確認原購買結果。')
+                }
+
+                quoteInput.value = state.quoteId
+            }
+
+            ready = true
+
+            show({
+                memberId,
+                restoredRequest: state,
+                message: '請貼入報價 quoteId，再確認購買。',
+            })
+        } catch (error) {
+            show({ message: error.message })
+        }
+
+        updateControls()
+
+        purchase.addEventListener('click', () => run(async () => {
+            if (state === null) {
+                const quoteId = quoteInput.value.trim()
+
+                if (!/^[a-f0-9]{64}$/.test(quoteId)) {
+                    throw new Error('請貼入完整的 64 字元 quoteId。')
+                }
+
+                state = {
+                    userId: memberId,
+                    quoteId,
+                    requestKey: crypto.randomUUID(),
+                }
+            }
+
+            // 必須先保存識別碼成功，才可以送單。
+            saveState()
+
+            const { csrfToken } = await getApiJson('/api/csrf')
+
+            const data = await postApiJson(
+                '/api/purchases',
+                {
+                    quoteId: state.quoteId,
+                    requestKey: state.requestKey,
+                },
+                { csrfToken }
+            )
+
+            recordResult(data)
+        }))
+
+        query.addEventListener('click', () => run(async () => {
+            const data = await getApiJson(
+                `/api/purchases?requestKey=${encodeURIComponent(state.requestKey)
+                }`
+            )
+
+            recordResult(data)
+        }))
+
+        conflict.addEventListener('click', () => run(async () => {
+            // 先確認原識別碼確實已有成功訂單。
+            await getApiJson(
+                `/api/purchases?requestKey=${encodeURIComponent(state.requestKey)
+                }`
+            )
+
+            const { csrfToken } = await getApiJson('/api/csrf')
+
+            // 使用尚未擁有的遊戲 3 取得另一份報價。
+            const quote = await postApiJson(
+                '/api/checkout/quote',
+                { gameIds: [3] },
+                { csrfToken }
+            )
+
+            try {
+                const result = await postApiJson(
+                    '/api/purchases',
+                    {
+                        quoteId: quote.quoteId,
+                        requestKey: state.requestKey,
+                    },
+                    { csrfToken }
+                )
+
+                show({
+                    passed: false,
+                    message: '預期拒絕不同商品，卻收到成功回應。',
+                    result,
+                })
+            } catch (error) {
+                show({
+                    code: error.code,
+                    status: error.status,
+                    message: error.message,
+                    passed:
+                        error.status === 409
+                        && error.code === 'REQUEST_KEY_REUSED',
+                })
+            }
+        }))
+        expiry.addEventListener('click', () => run(async () => {
+            const testKey = `lifecharge-phase6-expiry-test-${memberId}`
+            const saved = sessionStorage.getItem(testKey)
+
+            let test = saved === null ? null : JSON.parse(saved)
+
+            if (test === null) {
+                const { csrfToken } = await getApiJson('/api/csrf')
+
+                const quote = await postApiJson(
+                    '/api/checkout/quote',
+                    { gameIds: [3] },
+                    { csrfToken }
+                )
+
+                test = {
+                    quoteId: quote.quoteId,
+                    requestKey: crypto.randomUUID(),
+                }
+
+                // 先保存獨立識別碼，回應遺失時仍可查詢。
+                sessionStorage.setItem(testKey, JSON.stringify(test))
+            }
+
+            output.textContent = '等待 8 秒，讓五秒報價過期…'
+            await new Promise(resolve => setTimeout(resolve, 8000))
+
+            const { csrfToken } = await getApiJson('/api/csrf')
+
+            try {
+                const result = await postApiJson(
+                    '/api/purchases',
+                    test,
+                    { csrfToken }
+                )
+
+                show({
+                    passed: false,
+                    message: '預期拒絕過期報價，卻收到成功回應。',
+                    requestKey: test.requestKey,
+                    result,
+                })
+            } catch (error) {
+                show({
+                    code: error.code,
+                    status: error.status,
+                    message: error.message,
+                    requestKey: test.requestKey,
+                    passed:
+                        error.status === 409
+                        && error.code === 'QUOTE_EXPIRED',
+                })
+            }
+        }))
+
+        preparePrice.addEventListener('click', () => run(async () => {
+            const testKey = `lifecharge-phase6-price-test-${memberId}`
+            const saved = sessionStorage.getItem(testKey)
+
+            // 保留原測試識別碼，不覆蓋可能尚未確認的送單。
+            if (saved !== null) {
+                show({
+                    message: '已有價格測試紀錄，請保留並使用原紀錄送出或查詢。',
+                    test: JSON.parse(saved),
+                })
+                return
+            }
+
+            const { csrfToken } = await getApiJson('/api/csrf')
+
+            const quote = await postApiJson(
+                '/api/checkout/quote',
+                { gameIds: [3] },
+                { csrfToken }
+            )
+
+            const test = {
+                quoteId: quote.quoteId,
+                requestKey: crypto.randomUUID(),
+                quotedPrice: quote.items[0].unitPrice,
+                expiresAt: quote.expiresAt,
+            }
+
+            sessionStorage.setItem(testKey, JSON.stringify(test))
+
+            show({
+                prepared: true,
+                test,
+                message: '報價已保存，尚未送單。請依步驟調整資料庫價格後再送出。',
+            })
+        }))
+
+        submitPrice.addEventListener('click', () => run(async () => {
+            const testKey = `lifecharge-phase6-price-test-${memberId}`
+            const saved = sessionStorage.getItem(testKey)
+
+            if (saved === null) {
+                throw new Error('請先準備價格變動測試。')
+            }
+
+            const test = JSON.parse(saved)
+            const { csrfToken } = await getApiJson('/api/csrf')
+
+            try {
+                const result = await postApiJson(
+                    '/api/purchases',
+                    {
+                        quoteId: test.quoteId,
+                        requestKey: test.requestKey,
+                    },
+                    { csrfToken }
+                )
+
+                show({
+                    passed: false,
+                    message: '預期拒絕價格變動，卻收到成功回應。',
+                    requestKey: test.requestKey,
+                    result,
+                })
+            } catch (error) {
+                show({
+                    code: error.code,
+                    status: error.status,
+                    message: error.message,
+                    requestKey: test.requestKey,
+                    passed:
+                        error.status === 409
+                        && error.code === 'PRICE_CHANGED',
+                })
+            }
+        }))
+    </script>
+</body>
+
+</html>

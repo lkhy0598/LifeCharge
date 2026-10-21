@@ -140,3 +140,19 @@ export function postApiJson(
         timeoutMs,
     })
 }
+
+export async function getCsrfToken() {
+    const data = await getApiJson('/api/csrf')
+
+    if (
+        typeof data?.csrfToken !== 'string'
+        || !/^[a-f0-9]{64}$/.test(data.csrfToken)
+    ) {
+        throw new ApiError(
+            '操作驗證資料格式不正確。',
+            'INVALID_CSRF_RESPONSE'
+        )
+    }
+
+    return data.csrfToken
+}

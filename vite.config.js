@@ -13,10 +13,15 @@ export default defineConfig({
         target: 'http://127.0.0.1:8080',
         changeOrigin: true,
         rewrite: path => {
-          const targetPath = path.replace(
-            /^\/api\/(health|games|csrf|me|login|logout|register)(?=\?|$)/,
-            '/api/$1.php'
-          )
+          const targetPath = path
+            .replace(
+              /^\/api\/checkout\/quote(?=\?|$)/,
+              '/api/quote.php'
+            )
+            .replace(
+              /^\/api\/(health|games|csrf|me|login|logout|register|purchases)(?=\?|$)/,
+              '/api/$1.php'
+            )
 
           return `/lifecharge-backend${targetPath}`
         },

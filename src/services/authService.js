@@ -1,5 +1,10 @@
 import { DATABASE_MEDIA_BASE_URL } from '../config/system'
-import { ApiError, getApiJson, postApiJson } from './apiClient'
+import {
+    ApiError,
+    getApiJson,
+    postApiJson,
+    getCsrfToken,
+} from './apiClient'
 
 function invalidMember() {
     return new ApiError(
@@ -62,22 +67,6 @@ function normalizeMember(data) {
         avatar: avatar.href,
         purchasedGames: [...data.purchasedGames],
     }
-}
-
-async function getCsrfToken() {
-    const data = await getApiJson('/api/csrf')
-
-    if (
-        typeof data?.csrfToken !== 'string'
-        || !/^[a-f0-9]{64}$/.test(data.csrfToken)
-    ) {
-        throw new ApiError(
-            '操作驗證資料格式不正確。',
-            'INVALID_CSRF_RESPONSE'
-        )
-    }
-
-    return data.csrfToken
 }
 
 async function postMemberAction(path, body) {

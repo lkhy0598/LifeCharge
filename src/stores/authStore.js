@@ -341,6 +341,48 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
+    function applyDatabasePurchaseResult(result, expectedUserId) {
+        if (
+            source.value !== 'database'
+            || loadStatus.value !== 'ready'
+            || !currentUser.value
+            || currentUser.value.id !== expectedUserId
+            || result?.userId !== expectedUserId
+        ) {
+            throw new Error('會員身份已變更，請重新確認登入與購買結果。')
+        }
+
+        const ids = result.purchasedGames
+
+        if (
+            !Array.isArray(ids)
+            || !ids.every(id => Number.isInteger(id) && id > 0)
+            || new Set(ids).size !== ids.length
+        ) {
+            throw new Error('購買結果的遊戲清單格式不正確。')
+        }
+
+        currentUser.value = {
+            ...currentUser.value,
+            purchasedGames: [...ids],
+        }
+    }
+
+    async function revalidateDatabaseMember() {
+        return runMemberAction(async () => {
+            if (source.value !== 'database') {
+                throw new Error('目前不是 Database 會員模式。')
+            }
+
+            const user = await recoverDatabaseSession()
+
+            // 確認身份與 token 均可取得後，才同步狀態。
+            currentUser.value = user
+
+            return user
+        })
+    }
+
     return {
         users,
         currentUser,
@@ -360,5 +402,7 @@ export const useAuthStore = defineStore('auth', () => {
         loadStatus,
         loadError,
         initialize,
+        applyDatabasePurchaseResult,
+        revalidateDatabaseMember,
     }
 })

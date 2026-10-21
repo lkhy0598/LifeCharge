@@ -84,17 +84,19 @@ function readJsonBody(): array
     return get_object_vars($data);
 }
 
-function requireRequestMethod(string $method): void
+function requireRequestMethod(string|array $methods): void
 {
-    if (($_SERVER['REQUEST_METHOD'] ?? '') === $method) {
+    $allowed = is_array($methods) ? $methods : [$methods];
+
+    if (in_array($_SERVER['REQUEST_METHOD'] ?? '', $allowed, true)) {
         return;
     }
 
-    header('Allow: ' . $method);
+    header('Allow: ' . implode(', ', $allowed));
 
     sendError(
         'METHOD_NOT_ALLOWED',
-        "此端點只接受 {$method} 請求。",
+        '此端點只接受 ' . implode(' 或 ', $allowed) . ' 請求。',
         405
     );
 }

@@ -18,7 +18,7 @@ return [
         'http://localhost:5173',
     ],
 
-        // 登入／註冊限流，兩種操作分開計算。
+    // 登入／註冊限流，兩種操作分開計算。
     'rate_limits' => [
         'login' => [
             'max_attempts' => 20,
@@ -28,5 +28,10 @@ return [
             'max_attempts' => 5,
             'window_seconds' => 600,
         ],
+    ],
+
+    // 結帳報價有效 5分鐘，不保證鎖價。
+    'checkout' => [
+        'quote_lifetime_seconds' => 300,
     ],
 ];

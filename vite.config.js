@@ -14,8 +14,8 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: path => {
           const targetPath = path.replace(
-            /^\/api\/health(?=\?|$)/,
-            '/api/health.php'
+            /^\/api\/(health|games)(?=\?|$)/,
+            '/api/$1.php'
           )
 
           return `/lifecharge-backend${targetPath}`

@@ -180,7 +180,7 @@ LifeCharge/
 
 第 3 節的 V1 唯讀盤點已完成，使用者接著確認了資料表與主要 API 規則，整理於第 10 節。
 
-**目前進度：Phase 1、Phase 2 已由使用者逐步完成並提交至 feature/v2；Phase 3 的模式判斷基礎模組正在獨立驗收與文件收尾。** 目前網站入口仍使用 V1 Demo，尚未接入正式資料庫模式、啟動畫面或改動既有三個 Store。此次文件更新不代表批准 Phase 4；後續仍須按使用者授權逐階段進行，不自行安裝、執行資料庫變更、提交或推送 Git。
+**目前進度：Phase 1～3 已完成先前驗收；Phase 4 的遊戲 API、雙來源 Service／gameStore 與圖片適配已完成本輪驗收。** 目前正式網站入口仍使用 Demo，尚未接入自動模式判斷、啟動畫面或 Database 會員／購買流程；gameStore 已修改，authStore 與 cartStore 仍沿用 Demo。此次文件更新不代表批准 Phase 5；後續仍須按使用者授權逐階段進行，不自行安裝、執行資料庫變更、提交或推送 Git。
 
 ## 10. 使用者已確認的整合設計（2026-10-21）
 
@@ -448,4 +448,19 @@ Service 負責 JSON/API 的讀寫、格式與型別整理；Store 保存畫面�
 - Pinia 包裝 action Promise，外部 `first === second` 不適合作為重複請求測試；以 Network 實際 fetch 數量確認。
 - 測試目錄實際名稱是 `test/phase3/`（非 tests）；`vite.config.js` 測試設定輸出至 `dist/phase3-check`，正式網站的一般建置不包含測試頁。
 - 正式測試頁預期不發出 health；透過 Network Fetch/XHR 驗收。正式建置目前一律 Demo，未來其他正式 Database 部署另行設計，不把 DEV 當成資料庫可用性。
-- 完整前端 Database 資料、認證、購買流程仍待 Phase 4～6。後續各階段仍須獨立批准，不因基礎模式測試完成而跳階段。
+- Phase 4 遊戲資料已完成下節所列獨立驗收；完整前端 Database 啟動整合、認證與購買流程尚未完成。後續各階段仍須獨立批准，不因基礎模式測試完成而跳階段。
+
+### 10.13 Phase 4 實際進度與驗收範圍
+
+- 新增 `backend/public/api/games.php`，僅接受 GET；查詢 games、轉換數字與四個 JSON 陣列欄位，回傳統一回應。失敗回傳 503／GAMES_UNAVAILABLE，不暴露內部例外。
+- Vite 新增 `/api/games` 至 Apache `games.php` 的轉送；`src/config/system.js` 集中設定 DATABASE_MEDIA_BASE_URL，資料庫仍保存原資料夾名稱的相對路徑。
+- 新增 `src/services/gameService.js`：Demo 使用 JSON 與前端素材，Database 讀取 API、驗證資料並組合媒體網址；兩種來源均提供 cover、banner 及五張 screenshots。不在 API 失敗時回退 JSON。
+- gameStore 新增 initialize(mode)、source、loadStatus、loadError，保留 ID 查詢、搜尋及分類介面。預設同步 Demo 供現有入口使用；Database 初始化目前由獨立測試頁明確呼叫。
+- 同一 Store 不允許初始化途中更換模式；失敗清空 games、source 為 null、狀態 error 並拋出錯誤。初始化 Promise 仍保留，現階段以重新整理重試，正式啟動重試機制尚待整合。
+- GameCard、CartMenu、Home、GameDetail、SearchResults、Checkout 已移除各自的遊戲圖片 glob，直接使用 Service／Store 提供的圖片欄位；不包含會員頭像適配。
+- `test/phase4/index.html` 驗證雙來源資料與樣本封面；`store.html` 使用獨立 Pinia 驗證兩種 Store；`components.html` 使用 Database 資料渲染實際 GameCard，停用互動，另以 VImg 顯示第一款橫幅及截圖。
+- 已人工確認兩種 Store 各 30 款、來源及狀態正確，字串／未知 ID、中英文與空搜尋、類型查詢通過；新品 8、暢銷 14、精選 18。
+- MySQL 關閉時測試頁回報 passed false／GAMES_UNAVAILABLE，恢復服務並重新整理後通過；符合明確 Database 載入失敗不回退 Demo 的規則。此項輸出未單獨斷言失敗後所有 Store 欄位，該狀態處理由程式碼檢查確認。
+- Database 的 30 張 GameCard 封面及第一款橫幅、五張截圖已人工驗收；其餘後端橫幅／截圖未在此頁逐張目視驗收。正式 Demo 畫面圖片已由使用者逐步確認，npm run build 通過。
+- 獨立元件頁並未掛載完整 Home／GameDetail／CartMenu／Checkout，不代表完整 Database 頁面或交易流程驗收。一般正式建置與 Phase 3 專用測試建置均不包含這些 Phase 4 頁面。
+- 本輪未修改 main.js、authStore、cartStore 或資料表；正式入口仍為 Demo。systemStore 的啟動整合、三秒提示、會員認證、購物車隔離及購買持久化尚未完成，不能以現有 Demo 登入或購買冒充 Database。

@@ -12,7 +12,7 @@
         <template v-if="cartStore.cartCount > 0">
             <v-card class="pa-4" v-for="game in cartStore.cartGames" :key="game.id">
                 <section class="d-flex align-center ga-5">
-                    <v-img :src="getGameCover(game.id)" :alt="`${game.titleZh}封面`" width="80" max-width="80"
+                    <v-img :src="game.cover" :alt="`${game.titleZh}封面`" width="80" max-width="80"
                         aspect-ratio="0.75" cover rounded="lg" />
                     <div class="flex-grow-1 d-flex flex-column align-self-stretch">
                         <h3 class="text-title-large">{{ game.titleZh }}</h3>
@@ -63,27 +63,6 @@ import { useDisplay } from 'vuetify'
 
 const isOpen = defineModel({ type: Boolean, default: false })
 const cartStore = useCartStore()
-
-const coverImages = import.meta.glob(
-    '../assets/images/gameDataWebp/*/*_cover.webp',
-    {
-        eager: true,
-        import: 'default',
-        query: '?url'
-    }
-)
-
-function getGameCover(id) {
-    const folder = `game${String(id).padStart(2, '0')}`
-    const path = `../assets/images/gameDataWebp/${folder}/${folder}_cover.webp`
-    const image = coverImages[path]
-
-    if (!image) {
-        throw new Error(`找不到遊戲封面：${path}`)
-    }
-
-    return image
-}
 
 const router = useRouter()
 const authStore = useAuthStore()

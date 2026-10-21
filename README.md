@@ -4,13 +4,13 @@ Vue 遊戲商城作品。V1 已完成；V2 正在加入 PHP API 與 MySQL。
 
 ## 目前進度
 
-Phase 3：模式判斷基礎模組已完成獨立測試，尚未接入網站。
+Phase 4：遊戲 API、雙來源遊戲 Service／Store 與畫面圖片適配已完成本輪驗收。
 
 - 已建立五張資料表。
 - 已匯入 30 款遊戲、6 位測試會員及 26 筆初始擁有權。
 - 初始會員密碼以雜湊保存，未建立虛構訂單。
 - 已驗證重複匯入不重複新增。
-- 前端仍使用 JSON 與 sessionStorage，尚未串接資料庫。
+- 正式網站入口仍使用 Demo JSON 與 sessionStorage；Database 遊戲資料已在獨立測試頁串接驗證。
 - 自動模式判斷目前只在獨立測試頁運作；正式網站入口尚未使用。
 - 所有付款均為模擬。
 
@@ -238,7 +238,7 @@ Phase 2 完成時 health 僅驗證連線；Phase 3 已加入表結構及初始�
 | `src/services/healthService.js` | 驗證服務識別、API 版本及就緒旗標 |
 | `src/stores/systemStore.js` | 單次初始化的模式判斷與狀態管理 |
 
-目前僅在獨立測試頁使用，尚未接入 `main.js`、既有遊戲／會員／購物車 Store。
+模式判斷目前僅在獨立測試頁使用，尚未接入 `main.js`。Phase 4 已另外加入 gameStore 的雙來源初始化；會員與購物車仍沿用 Demo 流程。
 正常網站仍使用 V1 Demo；測試頁顯示 Database 不代表網站已串接 Database。
 
 ### 模式與錯誤規則
@@ -307,10 +307,59 @@ http://localhost:4174/LifeCharge/test/phase3/index.html
 - 最短顯示時間已滿且必要資料就緒，才進入網站；資料失敗顯示錯誤與重試，不因時間已滿就放行。
 - 不新增通用 `storage.js`。後續由 cartStore 根據固定模式選擇 key：Demo 為 `lifecharge-cart`，Database 為 `lifecharge-database-cart`。
 - Demo 的既有登入與購買 keys 保留；Database 身份及擁有權由後端提供，不互相搬移或合併。
-- 目前未修改原有 Store 或實作上述啟動畫面，不宣稱已完成實際購物車隔離。
+- Phase 4 已修改 gameStore；authStore、cartStore 與上述啟動畫面尚未接入模式判斷，不宣稱已完成實際購物車隔離。
 
-正式模式的遊戲、會員與購買服務仍待 Phase 4～6 完成；
+Database 遊戲來源已完成獨立驗收；會員與購買服務仍待 Phase 5～6 完成。
 未完成的 Database 服務不可用 Demo 身份或購買流程冒充。
+
+## Phase 4：遊戲 API、Service 與 Store
+
+| 檔案 | 本輪內容 |
+|---|---|
+| `backend/public/api/games.php` | GET 遊戲清單，轉換數字與 JSON 陣列，失敗回傳通用錯誤 |
+| `vite.config.js` | 將開發環境 `/api/games` 轉送至 Apache 的 `games.php` |
+| `src/config/system.js` | 集中設定 `DATABASE_MEDIA_BASE_URL` |
+| `src/services/gameService.js` | 統一 Demo／Database 遊戲格式及圖片網址，驗證 API 資料 |
+| `src/stores/gameStore.js` | 新增非同步 `initialize(mode)`、來源、載入狀態與錯誤；保留搜尋及分類介面 |
+| `src/components/GameCard.vue`、`src/components/CartMenu.vue` | 封面直接使用遊戲的 `cover` |
+| `src/views/Home.vue`、`src/views/GameDetail.vue` | 直接使用遊戲的 `banner` 與 `screenshots` |
+| `src/views/SearchResults.vue`、`src/views/Checkout.vue` | 封面直接使用遊戲的 `cover` |
+
+遊戲圖片解析集中在 Service，以上六個元件不再自行使用 `import.meta.glob` 尋找遊戲圖片。
+會員頭像不在這次圖片適配範圍內。
+
+### 資料流程與目前限制
+
+- Demo：JSON → Service 解析前端素材網址 → gameStore → 畫面。
+- Database：`GET /api/games` → PHP／MySQL → Service 驗證與組合後端媒體網址 → gameStore → 畫面。
+- 資料庫保存媒體相對路徑，保留 `gameDataWebp/` 原資料夾名稱；本機媒體基底為 `http://localhost:8080/lifecharge-backend/media/`。
+- gameStore 預設同步建立 Demo 資料，維持現有正式入口可用；明確初始化 Database 的測試頁才會讀取 API。
+- 同一個 Store 的初始化共用內部工作，不接受中途改用另一模式。失敗時清空遊戲資料、將來源設為 null、狀態設為 error，並向呼叫端拋出錯誤，不自動回退 Demo。
+- 目前初始化失敗後的 Promise 仍保留；再次呼叫不會重新請求。獨立測試透過重新整理重試，正式啟動流程的重試介面仍待設計。
+- 正式網站尚未接入 systemStore、自動模式選擇或三秒啟動畫面；登入、購物車暫存及購買仍是 Demo，不代表完整 Database 網站已完成。
+
+### 獨立測試與結果
+
+MySQL84、Apache、Vite 啟動後，開啟以下頁面：
+
+| 網址 | 驗收內容 |
+|---|---|
+| `http://localhost:5173/LifeCharge/test/phase4/index.html` | 比較兩種來源的遊戲內容、五張截圖結構，顯示各來源第一張封面 |
+| `http://localhost:5173/LifeCharge/test/phase4/store.html` | 兩個獨立 Store 的載入、ID 查詢、搜尋及分類 |
+| `http://localhost:5173/LifeCharge/test/phase4/components.html` | Database 資料渲染實際 GameCard 的 30 張封面，另以 VImg 顯示第一款橫幅及五張截圖 |
+
+已驗收：
+
+- Demo／Database 各 30 款；Store 狀態 ready、來源正確。
+- 字串 ID、未知 ID、中英文搜尋、空搜尋與類型查詢通過；新品 8、暢銷 14、精選 18。
+- MySQL 停止後，Store 測試顯示 `passed: false / GAMES_UNAVAILABLE`；此為預期的故障情境，不是自動切回 Demo。重新啟動並重新整理後恢復通過。
+- Database 元件頁的 30 張卡片封面、第一款橫幅與五張截圖已人工確認；測試區使用 inert，停用卡片操作。
+- 使用者已逐步確認正式 Demo 畫面圖片修改，`npm.cmd run build` 通過。
+
+元件頁沒有掛載完整 Home、GameDetail、CartMenu 或 Checkout；不將它描述為完整 Database 頁面、認證或購買驗收。其餘 29 款的後端橫幅／截圖尚未在此頁逐張目視驗收。
+以上測試頁供 Vite dev 使用，一般正式建置不包含它們；Phase 3 的測試建置設定也不包含 Phase 4 測試頁。
+
+後續先完成本階段文件與 Git 檢查，再依使用者授權進入 Phase 5；本輪不新增會員／購買 API、不更動資料表、不提交或推送 Git。
 
 ## 建置與部署
 

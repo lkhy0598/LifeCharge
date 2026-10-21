@@ -1,6 +1,6 @@
 <template>
     <v-card @click="openGame">
-        <v-img :src="gameCover" :alt="`${props.game.titleZh}封面`" rounded="lg" :aspect-ratio="3 / 4" cover>
+        <v-img :src="props.game.cover" :alt="`${props.game.titleZh}封面`" rounded="lg" :aspect-ratio="3 / 4" cover>
             <div v-if="props.mode === 'store'" class="cover-status">
                 <span v-if="isPurchased" class="status-badge is-owned">
                     已購買
@@ -45,27 +45,6 @@ const cartStore = useCartStore()
 function handleAddToCart() {
     cartStore.addToCart(props.game.id)
 }
-
-const coverImages = import.meta.glob(
-    '../assets/images/gameDataWebp/*/*_cover.webp',
-    {
-        eager: true,
-        import: 'default',
-        query: '?url'
-    }
-)
-
-const gameCover = computed(() => {
-    const folder = `game${String(props.game.id).padStart(2, '0')}`
-    const path = `../assets/images/gameDataWebp/${folder}/${folder}_cover.webp`
-    const image = coverImages[path]
-
-    if (!image) {
-        throw new Error(`找不到遊戲封面：${path}`)
-    }
-
-    return image
-})
 
 const props = defineProps({
     mode: {

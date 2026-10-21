@@ -158,54 +158,12 @@ const game = computed(() => {
     return gameStore.getGameById(route.params.id)
 })
 
-const bannerImages = import.meta.glob(
-    '../assets/images/gameDataWebp/*/*_banner.webp',
-    {
-        eager: true,
-        import: 'default',
-        query: '?url'
-    }
-)
-
 const gamebanner = computed(() => {
-    if (!game.value) return null
-
-    const folder = `game${String(game.value.id).padStart(2, '0')}`
-    const path = `../assets/images/gameDataWebp/${folder}/${folder}_banner.webp`
-    const image = bannerImages[path]
-
-    if (!image) {
-        throw new Error(`找不到遊戲 Banner：${path}`)
-    }
-
-    return image
+    return game.value?.banner ?? null
 })
 
-const screenshotImages = import.meta.glob(
-    '../assets/images/gameDataWebp/*/*_screenshots*.webp',
-    {
-        eager: true,
-        import: 'default',
-        query: '?url'
-    }
-)
-
 const screenshots = computed(() => {
-    if (!game.value) return []
-
-    const folder = `game${String(game.value.id).padStart(2, '0')}`
-
-    return Array.from({ length: 5 }, (_, index) => {
-        const number = String(index + 1).padStart(2, '0')
-        const path = `../assets/images/gameDataWebp/${folder}/${folder}_screenshots${number}.webp`
-        const image = screenshotImages[path]
-
-        if (!image) {
-            throw new Error(`找不到遊戲截圖：${path}`)
-        }
-
-        return image
-    })
+    return game.value?.screenshots ?? []
 })
 
 watch(

@@ -57,7 +57,7 @@
                 <template v-if="cartStore.cartCount > 0">
                     <template v-for="game in cartStore.cartGames" :key="game.id">
                         <div class="checkout-item d-flex align-center ga-4 py-4">
-                            <v-img class="checkout-cover" :src="getGameCover(game.id)" :alt="`${game.titleZh}封面`"
+                            <v-img class="checkout-cover" :src="game.cover" :alt="`${game.titleZh}封面`"
                                 width="120" max-width="120" :aspect-ratio="3 / 4" rounded="lg" cover />
                             <div class="checkout-item-info flex-grow-1">
                                 <h3>{{ game.titleZh }}</h3>
@@ -146,7 +146,7 @@
                 </p>
                 <template v-for="game in cartStore.cartGames" :key="game.id">
                     <div class="checkout-item d-flex align-center ga-4 py-4">
-                        <v-img class="checkout-cover" :src="getGameCover(game.id)" :alt="`${game.titleZh}封面`" width="120" max-width="120"
+                        <v-img class="checkout-cover" :src="game.cover" :alt="`${game.titleZh}封面`" width="120" max-width="120"
                             :aspect-ratio="3 / 4" rounded="lg" cover />
                         <div class="checkout-item-info flex-grow-1">
                             <h3>{{ game.titleZh }}</h3>
@@ -236,26 +236,6 @@ const completedOrder = ref(null)
 const cartStore = useCartStore()
 
 const currentStep = ref(1)
-
-const coverImages = import.meta.glob(
-    '../assets/images/gameDataWebp/*/*_cover.webp',
-    {
-        eager: true,
-        import: 'default',
-        query: '?url'
-    }
-)
-function getGameCover(id) {
-    const folder = `game${String(id).padStart(2, '0')}`
-    const path = `../assets/images/gameDataWebp/${folder}/${folder}_cover.webp`
-    const image = coverImages[path]
-
-    if (!image) {
-        throw new Error(`找不到遊戲封面：${path}`)
-    }
-
-    return image
-}
 
 const cardNumber = ref('')
 const cardExpiry = ref('')

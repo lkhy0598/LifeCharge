@@ -4,13 +4,13 @@ Vue 遊戲商城作品。V1 已完成；V2 正在加入 PHP API 與 MySQL。
 
 ## 目前進度
 
-Phase 4：遊戲 API、雙來源遊戲 Service／Store 與畫面圖片適配已完成本輪驗收。
+Phase 5：會員 API、雙模式會員 Store、登入／註冊視窗與購物車暫存隔離已完成本輪獨立驗收。
 
 - 已建立五張資料表。
-- 已匯入 30 款遊戲、6 位測試會員及 26 筆初始擁有權。
+- 初始匯入 30 款遊戲、6 位測試會員及 26 筆擁有權；註冊測試另有新增會員，現況不再固定為 6 位。
 - 初始會員密碼以雜湊保存，未建立虛構訂單。
 - 已驗證重複匯入不重複新增。
-- 正式網站入口仍使用 Demo JSON 與 sessionStorage；Database 遊戲資料已在獨立測試頁串接驗證。
+- 正式網站入口仍使用 Demo JSON 與 sessionStorage；Database 遊戲及會員功能已在獨立測試頁串接驗證。
 - 自動模式判斷目前只在獨立測試頁運作；正式網站入口尚未使用。
 - 所有付款均為模擬。
 
@@ -305,11 +305,11 @@ http://localhost:4174/LifeCharge/test/phase3/index.html
 - 顯示「正在判斷運作模式…」及 Demo／Database 的說明；判定後顯示對應模式與載入狀態。
 - 公開靜態版本直接顯示 Demo，不假裝探測 Database。
 - 最短顯示時間已滿且必要資料就緒，才進入網站；資料失敗顯示錯誤與重試，不因時間已滿就放行。
-- 不新增通用 `storage.js`。後續由 cartStore 根據固定模式選擇 key：Demo 為 `lifecharge-cart`，Database 為 `lifecharge-database-cart`。
+- 不新增通用 `storage.js`。Phase 5 已由 cartStore 根據固定模式選擇 key：Demo 為 `lifecharge-cart`，Database 為 `lifecharge-database-cart`。
 - Demo 的既有登入與購買 keys 保留；Database 身份及擁有權由後端提供，不互相搬移或合併。
-- Phase 4 已修改 gameStore；authStore、cartStore 與上述啟動畫面尚未接入模式判斷，不宣稱已完成實際購物車隔離。
+- 三個 Store 已提供模式初始化；Phase 5 獨立視窗頁依序初始化遊戲、會員及購物車，驗證暫存隔離。正式 main.js 尚未接上 systemStore 與上述啟動畫面。
 
-Database 遊戲來源已完成獨立驗收；會員與購買服務仍待 Phase 5～6 完成。
+Database 遊戲與會員已完成本輪獨立驗收；購買服務仍待 Phase 6 完成。
 未完成的 Database 服務不可用 Demo 身份或購買流程冒充。
 
 ## Phase 4：遊戲 API、Service 與 Store
@@ -359,7 +359,115 @@ MySQL84、Apache、Vite 啟動後，開啟以下頁面：
 元件頁沒有掛載完整 Home、GameDetail、CartMenu 或 Checkout；不將它描述為完整 Database 頁面、認證或購買驗收。其餘 29 款的後端橫幅／截圖尚未在此頁逐張目視驗收。
 以上測試頁供 Vite dev 使用，一般正式建置不包含它們；Phase 3 的測試建置設定也不包含 Phase 4 測試頁。
 
-後續先完成本階段文件與 Git 檢查，再依使用者授權進入 Phase 5；本輪不新增會員／購買 API、不更動資料表、不提交或推送 Git。
+Phase 4 已由使用者提交與推送；後續 Phase 5 實作及驗收如下。各階段的 Git 提交與推送仍由使用者操作。
+
+## PHP 檔案分工
+
+`config/` 保存設定，`src/` 提供內部工具，`public/api/` 是瀏覽器能呼叫的端點，`scripts/` 是命令列工具。Apache 僅公開 `backend/public/`。
+
+| 檔案（相對於 backend/） | 用途與呼叫關係 | 資料庫操作 |
+|---|---|---|
+| `config/app.php` | session 名稱、期限、允許來源及限流參數，由共用工具讀取；不含帳密 | 無 |
+| `config/database.example.php` | 提供可提交 Git 的連線範本 | 無 |
+| `config/database.local.php` | 本機私有連線設定，由 database.php 讀取；不提交 Git | 僅保存設定 |
+| `src/database.php` | connectDatabase() 建立 PDO，供端點及 seed 使用 | 建立連線 |
+| `src/session.php` | appConfig()、啟動 session、檢查過期、提供更新活動時間工具 | 無，操作 PHP session |
+| `src/response.php` | sendSuccess()／sendError() 輸出統一 JSON 並結束請求 | 無 |
+| `src/csrf.php` | 產生、取得與驗證 CSRF token，供 csrf 及 POST 端點使用 | 無，操作 PHP session |
+| `src/request.php` | 驗證 Origin、讀取最多 16 KiB 的 JSON 物件 | 無 |
+| `src/user.php` | 查詢公開會員與擁有權，或供登入驗證使用的密碼雜湊；後者不回傳前端 | 唯讀 |
+| `src/validation.php` | 驗證註冊欄位，回傳欄位錯誤 | 無 |
+| `src/rateLimit.php` | 依操作及 REMOTE_ADDR 計數，以檔案鎖保護限流紀錄 | 無，寫入 storage/rate-limits |
+| `public/api/health.php` | 檢查 DB、必要欄位及初始遊戲是否就緒 | 唯讀 |
+| `public/api/games.php` | 取得遊戲清單並轉換回應型別 | 唯讀 |
+| `public/api/csrf.php` | GET 取得目前 session 的 CSRF token | 無 |
+| `public/api/me.php` | GET 查詢目前身份及已擁有遊戲 | 唯讀 |
+| `public/api/login.php` | POST 驗證帳號或 Email 與密碼，建立登入 session | 唯讀 |
+| `public/api/logout.php` | POST 清除 session 與 Cookie，購物車不清除 | 無 |
+| `public/api/register.php` | POST 新增會員並自動登入，使用預設頭像 | 交易新增 users，另讀取會員資料 |
+| `scripts/seed.php` | 命令列預檢、匯入初始會員／遊戲／擁有權 | 預設唯讀，--apply 才寫入 |
+
+例如瀏覽器呼叫 `public/api/csrf.php`，該入口使用 `src/csrf.php` 與 `src/session.php` 取得 token，再由 `src/response.php` 輸出 JSON。相同名稱的入口與工具各有職責，不是兩個公開端點。
+
+## Phase 5：會員與註冊
+
+### API 與驗證順序
+
+Vite dev 將 `/api/csrf`、`/api/me`、`/api/login`、`/api/logout`、`/api/register` 轉送到 Apache 對應 PHP。瀏覽器透過同源 proxy 使用 session Cookie，不另外開啟跨來源 CORS。
+
+| 方法／路徑 | 成功內容 | 注意事項 |
+|---|---|---|
+| GET /api/csrf | `{ csrfToken }` | 不查詢 DB，不延長登入期限 |
+| GET /api/me | 公開會員物件 | 未登入回 401／UNAUTHENTICATED；服務故障回 503，不當成登出 |
+| POST /api/login | 公開會員物件 | `{ identifier, password }`；失敗 401／INVALID_CREDENTIALS |
+| POST /api/logout | `{ loggedOut: true }` | 清除 session 及 Cookie |
+| POST /api/register | 201，公開會員物件 | `{ username, email, displayName, password }`；重複回 409／ACCOUNT_EXISTS |
+
+公開會員欄位為 id、username、email、displayName、avatar、purchasedGames，不含密碼或雜湊。API avatar 為相對路徑，由 authService 組成媒體網址。
+
+登入／註冊依序檢查方法、Origin、限流、CSRF、JSON 與欄位，再進行資料庫操作；登出檢查方法、Origin 與 CSRF。允許來源目前為 `http://localhost:5173`，換 host 或 port 時需更新 app.php；來源不包含 `/LifeCharge/` 路徑。寫入請求缺少 Origin 也會被拒絕。
+
+- 帳號：3～50 個 ASCII 英文字母、數字、底線或連字號，不含 @；Email 使用資料庫唯一約束，帳號與 Email 依現有 collation 比對。
+- 顯示名稱：去除一般前後空白後 1～100 字元；Email 由後端驗證，最多 254 bytes。
+- 新密碼：至少 8 個字元、最多 72 bytes，不允許空白、分隔空白或空字元，不 trim、不改大小寫；使用 PASSWORD_BCRYPT 雜湊。舊會員登入不要求至少 8 字元，仍受 72 bytes 與空白規則限制。
+- 確認密碼只在前端檢查，不送入 API。後端欄位錯誤為 400／VALIDATION_FAILED，附 error.fields；錯誤媒體格式／過大內容另回 415／413。
+- 新會員的 purchasedGames 為空，avatar 為 `usersDataWebp/default.webp`；不新增訂單或擁有權。註冊會切換目前的後端登入身份。
+- 註冊回應遺失或 503 時不能斷定沒有新增，不自動重送；先查 /me 或確認資料庫。AUTO_INCREMENT 編號可能因失敗嘗試產生間隔，不要求連號。
+
+### Session、CSRF 與限流
+
+- Cookie 名稱 lifecharge_session；只用 Cookie 傳遞 ID、strict mode、HttpOnly、SameSite=Lax、path=/，不設定持久保存期限。本機 HTTP 使用 secure=false，HTTPS 部署須另行調整。
+- 後端根據 last_activity 明確檢查 1800 秒期限，不能只依賴 PHP 垃圾回收。登入／註冊成功更新 session ID、活動時間與 CSRF token，清除先前 session 資料。
+- /me、/csrf 不更新活動時間。touchAppSession() 已提供，但現有端點尚未呼叫；目前登入後若沒有未來新增的有效活動更新，會於 30 分鐘後過期。Phase 6 須明確決定哪些有效操作延長閒置期限。
+- token 為 random_bytes(32) 的 64 字元十六進位字串，保存在後端 session，以 hash_equals() 比對 X-CSRF-Token；登入／註冊成功會更新。
+- authService 每次 POST 前取得目前 token，不存入 localStorage／sessionStorage。取得與送出間若身份改變，仍可能遇到 CSRF 403。
+- authStore 只對 403／CSRF_TOKEN_INVALID 重新查 /me 並取得有效 token，成功才同步會員並提示重新操作，不重送原 action。重新驗證故障時保留先前會員狀態並拋出錯誤。身份變更與恢復失敗的分支尚未各自模擬驗收。
+- 固定時間窗：登入同一 IP 5 分鐘 20 次，註冊 10 分鐘 5 次，兩者分開；允許來源的成功／失敗嘗試皆計入，超額回 429／RATE_LIMITED 與 Retry-After 秒數。
+- 限流紀錄自動建立於已忽略且不公開的 `backend/storage/rate-limits/`；使用 REMOTE_ADDR，不信任使用者提供的轉送 IP。Vite proxy 下本機請求通常共用同一 IP，其他公開部署需重新設計代理信任與限流儲存。
+- 記錄讀寫或鎖定失敗會由 API 回報服務錯誤，不略過限流。目前不自動刪除過期限流檔案；期限到後於下次請求重設計數。
+
+### 前端整合範圍
+
+- apiClient 保留原 GET 介面並新增 POST JSON／CSRF 標頭；ApiError 保存 fields 及 retryAfter。GET 預設逾時仍使用既有設定，POST 預設 10 秒，不自動重送。
+- authService 負責 Database API、回應驗證、頭像網址與 Demo 頭像轉換；authStore 負責身份、操作忙碌與初始化狀態。
+- authStore 預設 Demo；initialize(mode) 先確認同模式遊戲 ready，再恢復身份。Database 只用 PHP session／user_games，不讀寫 Demo 登入及購買 keys；Database 模式拒絕原 Demo purchaseGames()。
+- Demo 會員資料及 purchasedGames 先複製，避免共用並修改 JSON 匯入物件；Demo 支援帳號或 Email 不分大小寫登入。NavBar、Member 直接使用已解析 avatar。
+- LoginDialog 保留同一個視窗，Database 才顯示會員註冊。切換清除密碼與錯誤、保留目的地；關閉重設。提交中鎖定操作，註冊成功自動登入並接續目的地，無目的地前往 /member；長表單可捲動。
+- Member 登出等待 API 成功後才清除畫面並回首頁；失敗顯示錯誤。cartStore 初始化使用兩個獨立 key，恢復期間暫停寫回，避免空陣列覆蓋已存清單；登入排除已擁有遊戲，登出保留購物車。
+- 正式 main.js 仍沿用 Demo 恢復流程；獨立測試才依序 initialize games → auth → cart。完整 Database 導覽、真正結帳頁及自動模式啟動畫面尚未整合。
+
+### 測試入口及紀錄
+
+以下網址前綴為 `http://localhost:5173/LifeCharge/test/phase5/`，供 Vite dev 使用，普通正式建置不包含測試頁。
+
+| 頁面 | 用途／副作用 |
+|---|---|
+| `login.html` | 直接測登入、/me、登出、錯誤 CSRF；建立／清除真實後端 session |
+| `register.html` | 直接測註冊、自動登入與預設頭像；成功會新增真實 DB 測試會員 |
+| `rate-limit.html` | 缺少 CSRF 的請求消耗額度，驗證 429；不新增會員，測後可能需等 5／10 分鐘 |
+| `service.html` | 透過 authService 測登入、恢復、登出與故障 |
+| `store.html` | 先初始化 Database 遊戲再測 authStore，檢查 Demo 購買被拒絕 |
+| `dialog.html` | 真正 LoginDialog、獨立 Pinia／記憶體路由，驗證 Database 視窗；註冊會新增會員 |
+| `dialog.html?mode=demo` | Demo 視窗與註冊入口隱藏；使用 Demo 暫存 |
+| `csrf-recovery.html` | 只模擬登入 403，其餘 /me、/csrf 使用真實 API；不執行真正登入或占登入額度 |
+
+已由使用者逐步驗收：
+
+- 原會員登入／恢復、註冊自動登入、Email 登入、預設頭像、登出後 /me 401。
+- 帳號重複、Email 重複皆 409；密碼含空白回 400 及 password 欄位錯誤。註冊測試已建立新會員，不再用初始 users=6 作現況驗收。
+- 錯誤 CSRF 回 403，原登入身份仍可查詢；不允許來源回 403／ORIGIN_NOT_ALLOWED。
+- 登入第 21 次、註冊第 6 次回 429，Retry-After 分別 300／600 秒。到期後恢復額度尚未以獨立自動案例驗證。
+- 暫設 10 秒驗收過期後 /me 未登入，已恢復 app.php 為 1800 並修正設定語法；/me 與 /csrf 不延長期限。
+- 已登入時停止 MySQL，會員查詢回 503／MEMBER_UNAVAILABLE，不轉成 user:null；服務恢復後可查原會員。
+- Service／Store、實際視窗、目的地與 Demo 回歸由使用者確認；Database 視窗檢查 otherCartUnchanged。完整雙模式購物車新增／移除／重載的自動測試矩陣尚未建立。
+- CSRF 恢復的登入／未登入兩情境皆 passed:true；各只有 login=1、me=1、csrf=2，原登入請求未重送，isBusy 恢復 false。
+- npm.cmd run build 通過；PHP 與 JavaScript 語法檢查在逐步開發時執行。這些不等於正式入口 Database 全流程驗收。
+
+### 尚未完成
+
+正式入口自動模式判斷、三秒啟動畫面與必要資料等待、初始化重試介面、完整 Database 頁面整合仍待處理；Database 報價、訂單、購買結果查詢與持久化屬 Phase 6，尚未實作。購買的 CSRF 恢復還需先查原 requestKey，不可直接套用會員操作重送。頭像上傳、驗證信、忘記密碼及管理後台不在本階段。
+
+本輪不變更資料表、不重新執行 seed、不自行提交或推送 Git。Phase 6 開始前仍須列出範圍並取得階段授權。
 
 ## 建置與部署
 

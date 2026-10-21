@@ -1,32 +1,54 @@
 import { HEALTH_CHECK_TIMEOUT_MS } from '../config/system'
 
-// 統一保存錯誤代碼與 HTTP 狀態。
+// 統一保存 API 錯誤資訊。
 export class ApiError extends Error {
-    constructor(message, code, status = null) {
+    constructor(
+        message,
+        code,
+        status = null,
+        { fields = null, retryAfter = null } = {}
+    ) {
         super(message)
         this.name = 'ApiError'
         this.code = code
         this.status = status
+        this.fields = fields
+        this.retryAfter = retryAfter
     }
 }
 
-// 目前先提供 GET，之後會員與購買階段再擴充 POST。
-export async function getApiJson(
+async function requestApiJson(
     path,
-    { timeoutMs = HEALTH_CHECK_TIMEOUT_MS } = {}
+    {
+        method = 'GET',
+        body,
+        csrfToken,
+        timeoutMs = HEALTH_CHECK_TIMEOUT_MS,
+    } = {}
 ) {
-    const controller = new AbortController()
+    const headers = {
+        Accept: 'application/json',
+    }
 
-    const timer = setTimeout(() => {
-        controller.abort()
-    }, timeoutMs)
+    let encodedBody
+
+    if (method === 'POST') {
+        headers['Content-Type'] = 'application/json'
+        encodedBody = JSON.stringify(body)
+
+        if (typeof csrfToken === 'string' && csrfToken !== '') {
+            headers['X-CSRF-Token'] = csrfToken
+        }
+    }
+
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), timeoutMs)
 
     try {
         const response = await fetch(path, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-            },
+            method,
+            headers,
+            body: encodedBody,
             credentials: 'same-origin',
             cache: 'no-store',
             signal: controller.signal,
@@ -37,7 +59,6 @@ export async function getApiJson(
         try {
             payload = await response.json()
         } catch (error) {
-            // 讀取回應途中逾時，交給外層處理。
             if (controller.signal.aborted) throw error
 
             throw new ApiError(
@@ -48,6 +69,14 @@ export async function getApiJson(
         }
 
         if (!response.ok) {
+            const fields = payload?.error?.fields
+            const retryHeader = response.headers.get('Retry-After')
+
+            const retryAfter =
+                retryHeader !== null && /^\d+$/.test(retryHeader)
+                    ? Number(retryHeader)
+                    : null
+
             throw new ApiError(
                 typeof payload?.error?.message === 'string'
                     ? payload.error.message
@@ -55,7 +84,16 @@ export async function getApiJson(
                 typeof payload?.error?.code === 'string'
                     ? payload.error.code
                     : 'HTTP_ERROR',
-                response.status
+                response.status,
+                {
+                    fields:
+                        fields
+                        && typeof fields === 'object'
+                        && !Array.isArray(fields)
+                            ? fields
+                            : null,
+                    retryAfter,
+                }
             )
         }
 
@@ -79,4 +117,26 @@ export async function getApiJson(
     } finally {
         clearTimeout(timer)
     }
+}
+
+// 保留既有 GET 介面與預設逾時。
+export function getApiJson(path, options = {}) {
+    return requestApiJson(path, {
+        ...options,
+        method: 'GET',
+    })
+}
+
+// POST 預設等待 10 秒，讓密碼雜湊等操作有較充足的時間。
+export function postApiJson(
+    path,
+    body,
+    { csrfToken, timeoutMs = 10000 } = {}
+) {
+    return requestApiJson(path, {
+        method: 'POST',
+        body,
+        csrfToken,
+        timeoutMs,
+    })
 }

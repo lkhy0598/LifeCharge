@@ -180,7 +180,7 @@ LifeCharge/
 
 第 3 節的 V1 唯讀盤點已完成，使用者接著確認了資料表與主要 API 規則，整理於第 10 節。
 
-**目前進度：Phase 1～3 已完成先前驗收；Phase 4 的遊戲 API、雙來源 Service／gameStore 與圖片適配已完成本輪驗收。** 目前正式網站入口仍使用 Demo，尚未接入自動模式判斷、啟動畫面或 Database 會員／購買流程；gameStore 已修改，authStore 與 cartStore 仍沿用 Demo。此次文件更新不代表批准 Phase 5；後續仍須按使用者授權逐階段進行，不自行安裝、執行資料庫變更、提交或推送 Git。
+**目前進度：Phase 1～4 已完成先前驗收；Phase 5 會員 API、雙模式 authStore、登入／註冊視窗及購物車暫存隔離已完成本輪獨立驗收。** 三個 Store 已提供模式初始化，但正式 main.js 仍沿用 Demo，尚未接上自動模式判斷、啟動畫面或完整 Database 頁面／購買流程。此次文件更新不代表批准 Phase 6；後續仍須按使用者授權逐階段進行，不自行安裝、執行資料庫變更、提交或推送 Git。
 
 ## 10. 使用者已確認的整合設計（2026-10-21）
 
@@ -408,7 +408,7 @@ Service 負責 JSON/API 的讀寫、格式與型別整理；Store 保存畫面�
 - 已選定並驗證：XAMPP Apache/PHP 8.2.12 搭配獨立 MySQL 8.4.13；Apache 使用 8080，MySQL 使用 3306，不使用 XAMPP MariaDB。MySQL Windows 服務為 MySQL84，圖形管理工具為 Workbench。
 - 本機私有設定為 `backend/config/database.local.php`，已忽略且不提交 Git；連線到 lifecharge 的專用帳號為 lifecharge_app，限本機與 SELECT/INSERT/UPDATE。設定範本不保存真實憑證。
 - Apache `/lifecharge-backend/` 僅對應 `backend/public/`，限制本機存取；Vite `/api/health` 轉送至 Apache `/lifecharge-backend/api/health.php`。媒體 Base URL 為 `http://localhost:8080/lifecharge-backend/media/`，後續 Service 需集中管理，不寫死於資料庫。
-- 尚待實作前細化：密碼長度上限及 PHP 雜湊演算法相容性、session 與 CSRF 端點是否延長閒置期限、報價與 requestKey 的分頁恢復/保存及請求內容比對方式、錯誤碼完整列表與限流參數。不得當成已決定的功能任意擴張。
+- Phase 5 已選定新密碼至少 8 字元、最多 72 bytes，使用 PASSWORD_BCRYPT；/me 與 /csrf 不延長閒置期限。登入／註冊限流參數及已實作錯誤碼見第 10.14 節與 README。尚待細化：Phase 6 有效操作的活動時間更新、報價與 requestKey 的分頁恢復／保存及請求內容比對方式、購買錯誤碼，不當成已完成的功能。
 - 頭像上傳需之後獨立批准；目前不增加上傳 API 或處理流程。
 
 ### 10.10 會員登入／註冊視窗（後續確認）
@@ -423,7 +423,7 @@ Service 負責 JSON/API 的讀寫、格式與型別整理；Store 保存畫面�
 - 關閉視窗時重設表單；下次開啟回到登入。關閉／取消流程沿用既有目的地清理語意，表單內部切換不可誤觸取消登入。
 - 註冊成功後自動登入，清理購物車中已擁有的遊戲，接續原目的地；無目的地則前往會員中心。
 - 手機維持單欄，視窗內容可上下捲動，確保關閉與送出操作可到達。
-- 隱藏入口不取代後端註冊驗證。此項在 Phase 5 實作，更新本文件不代表已批准開始該階段。
+- 隱藏入口不取代後端註冊驗證。Phase 5 已完成獨立視窗驗收；正式入口 Database 整合仍待後續處理。
 
 ### 10.11 啟動畫面與簡化暫存方案（Phase 3 討論確認）
 
@@ -432,10 +432,10 @@ Service 負責 JSON/API 的讀寫、格式與型別整理；Store 保存畫面�
 - 啟動顯示「正在判斷運作模式…」，說明 Demo 展示模式／Database 資料庫模式；完成判斷後顯示對應模式與載入進度。公開靜態建置固定 Demo，不假裝檢查本機服務。
 - 只有最短時間已滿、必要資料已就緒才顯示可操作畫面；資料較慢則繼續等待，失敗顯示錯誤與重試，不因滿 3 秒就直接放行。
 - 目前只建立時間設定，尚未實作畫面或整合 main.js。整合時必須等待遊戲、會員、購物車初始化，不可顯示 Database 卻使用 Demo 會員或購買資料。
-- 依使用者要求簡化：不新增通用 storage.js。後續直接由 cartStore 依模式選擇 `lifecharge-cart`（Demo）或 `lifecharge-database-cart`（Database）。
+- 依使用者要求簡化：不新增通用 storage.js。Phase 5 已由 cartStore 依模式選擇 `lifecharge-cart`（Demo）或 `lifecharge-database-cart`（Database）。
 - Demo 原登入與購買 keys 繼續保留；正式身份由 PHP session 驗證，正式擁有權從後端取得，不新增可冒充正式身份／擁有權的 sessionStorage 紀錄。
 - 兩種模式不搬移、不合併資料。不能假設重新整理會清除 sessionStorage；同分頁切換模式仍需使用獨立 key。關閉分頁或瀏覽器恢復分頁的行為不作安全依據。
-- 目前尚未修改既有 cartStore/authStore，暫存隔離是後續接入要求，不算已完成的功能或測試。
+- Phase 5 已修改 authStore／cartStore，並在獨立 Database 視窗驗收另一模式購物車 key 未改動；正式入口仍未接入 systemStore，完整購物車測試矩陣尚未建立。
 
 ### 10.12 Phase 1～3 實際進度與驗收範圍
 
@@ -464,3 +464,22 @@ Service 負責 JSON/API 的讀寫、格式與型別整理；Store 保存畫面�
 - Database 的 30 張 GameCard 封面及第一款橫幅、五張截圖已人工驗收；其餘後端橫幅／截圖未在此頁逐張目視驗收。正式 Demo 畫面圖片已由使用者逐步確認，npm run build 通過。
 - 獨立元件頁並未掛載完整 Home／GameDetail／CartMenu／Checkout，不代表完整 Database 頁面或交易流程驗收。一般正式建置與 Phase 3 專用測試建置均不包含這些 Phase 4 頁面。
 - 本輪未修改 main.js、authStore、cartStore 或資料表；正式入口仍為 Demo。systemStore 的啟動整合、三秒提示、會員認證、購物車隔離及購買持久化尚未完成，不能以現有 Demo 登入或購買冒充 Database。
+
+### 10.14 Phase 5 實際進度與驗收範圍
+
+- 新增 backend/config/app.php、src/session.php、response.php、csrf.php、request.php、user.php、validation.php、rateLimit.php；逐支 PHP 的職責、呼叫關係及資料庫操作已整理在 README「PHP 檔案分工」。config/database.local.php 仍不提交 Git，不公開帳密。
+- 新增 GET /api/csrf、GET /api/me、POST /api/login、POST /api/logout、POST /api/register，Vite proxy 已轉送對應 PHP。會員回應僅包含 id、username、email、displayName、avatar、purchasedGames，不含密碼雜湊。
+- 註冊單一交易新增 users，使用 usersDataWebp/default.webp，自動登入且無初始遊戲；不建立訂單或擁有權。唯一約束拒絕重複帳號／Email，回 409／ACCOUNT_EXISTS。本輪未改 schema 或重新匯入 seed，註冊測試另新增會員，users=6 僅代表初始匯入狀態。
+- 密碼使用 PASSWORD_BCRYPT，新密碼至少 8 字元、最多 72 bytes，不含空白及空字元；舊會員登入不套用 8 字元下限。確認密碼不送 API；後端驗證失敗回 400／VALIDATION_FAILED 與 fields。JSON 媒體型別／過大內容另回 415／413。
+- Session 使用專用 Cookie、HttpOnly、SameSite=Lax、strict mode；本機 HTTP secure=false。後端 last_activity 檢查 1800 秒，登入／註冊更新 ID、token 與時間並清除先前資料。/me、/csrf 不延長期限；touchAppSession() 尚無端點呼叫，Phase 6 須明確接入有效活動時間更新，不能宣稱已有完整滑動閒置更新。
+- 登入／註冊先檢查 Origin，再依操作及 REMOTE_ADDR 限流，之後驗證 CSRF 與輸入。固定窗為登入 20 次／300 秒、註冊 5 次／600 秒；超額 429／RATE_LIMITED 與 Retry-After。storage/rate-limits 使用檔案鎖，失敗不略過限制；目前為本機單機方案，無過期檔自動清理，不代表公開部署限流架構。
+- apiClient 增加 POST、fields、retryAfter；authService 統一 Database 會員回應及兩種頭像網址。每次 POST 前取得 token，不長期保存或自動重送。/me 只有明確 401／UNAUTHENTICATED 才視為未登入，服務故障保持為錯誤。
+- authStore 支援固定模式初始化、非同步登入／登出／註冊及 isBusy，先要求同模式遊戲 ready；失敗不轉 Demo。Database 身份不從瀏覽器暫存還原，且拒絕原 Demo purchaseGames。Demo 保留既有 keys，會員資料先複製並支援帳號或 Email 登入。
+- 403／CSRF_TOKEN_INVALID 時，authStore 查 /me 再取得有效 token，成功才同步身份並提示再次操作；不自動重送，重新驗證失敗也不假裝登出。此為會員操作處理，購買仍須在 Phase 6 先查原 requestKey。
+- LoginDialog 同窗切換登入／註冊，Demo 隱藏註冊；密碼可顯示，切換清除密碼與錯誤、保留目的地，關閉重設，提交鎖定，手機長表單可捲動。註冊自動登入後接續目的地，無目的地前往 /member。Member 登出等待成功後返回首頁；NavBar／Member 使用正規化頭像。
+- cartStore.initialize(mode) 要求遊戲、會員同模式就緒，再選獨立 key；恢復期間停止寫回，驗證／去重／排除已擁有後保存。登入排除已擁有遊戲，登出保留購物車，不新增購物車資料表。
+- test/phase5/ 有 login、register、rate-limit、service、store、dialog、csrf-recovery 七個 HTML 測試頁；dialog 使用獨立 Pinia 與記憶體路由，/member、/checkout 僅為目的地紀錄，不渲染真正頁面。註冊頁與視窗註冊會寫入 users；限流頁會用完本機額度，且不新增會員。一般正式建置不包含這些頁面。
+- 已人工確認登入／恢復／登出、註冊自動登入與預設頭像、Email 登入、帳號／Email 各自重複拒絕、密碼空白欄位錯誤、錯誤 CSRF 不登出、不允許來源 403、登入第 21 次與註冊第 6 次 429。到期恢復額度未另以獨立自動案例驗收。
+- 10 秒過期測試已通過並恢復 1800，修正設定缺逗號後恢復正常；已登入時停止 MySQL 得到 503／MEMBER_UNAVAILABLE，不誤判登出，服務恢復後查回原會員。
+- 已確認 Service／Store、Database 視窗註冊／目的地、Demo 回歸及 otherCartUnchanged；CSRF 恢復的已登入／未登入兩案例均 passed true，login=1、me=1、csrf=2，isBusy 恢復 false。身份變更、恢復失敗及完整購物車新增／移除／重載的自動測試矩陣尚未各自建立。
+- 正式建置通過；後續仍須保留語法檢查。main.js 未修改，正式入口仍 Demo，尚未驗收完整 Database 導覽／真結帳頁。自動模式、三秒啟動畫面與重試介面仍待整合；Phase 6 報價／訂單／冪等查詢與持久化尚未開始。

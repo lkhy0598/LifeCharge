@@ -14,7 +14,7 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: path => {
           const targetPath = path.replace(
-            /^\/api\/(health|games)(?=\?|$)/,
+            /^\/api\/(health|games|csrf|me|login|logout|register)(?=\?|$)/,
             '/api/$1.php'
           )
 

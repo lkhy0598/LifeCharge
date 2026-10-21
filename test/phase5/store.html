@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>會員 Store 測試</title>
+</head>
+<body>
+    <h1>會員 Store 測試</h1>
+
+    <form id="form">
+        <p>
+            <label>
+                帳號或 Email
+                <input id="identifier" autocomplete="username" required>
+            </label>
+        </p>
+        <p>
+            <label>
+                密碼
+                <input id="password" type="password"
+                    autocomplete="current-password" required>
+            </label>
+        </p>
+        <button type="submit">測試登入</button>
+    </form>
+
+    <p>
+        <button id="logout" type="button">測試登出</button>
+        <button id="guard" type="button">測試購買隔離</button>
+    </p>
+
+    <pre id="result">正在初始化…</pre>
+
+    <script type="module">
+        import { createPinia } from 'pinia'
+        import { useGameStore } from '../../src/stores/gameStore.js'
+        import { useAuthStore } from '../../src/stores/authStore.js'
+
+        const pinia = createPinia()
+        const gameStore = useGameStore(pinia)
+        const authStore = useAuthStore(pinia)
+
+        const form = document.querySelector('#form')
+        const identifier = document.querySelector('#identifier')
+        const password = document.querySelector('#password')
+        const buttons = document.querySelectorAll('button')
+        const output = document.querySelector('#result')
+
+        let initialized = false
+
+        function show(extra = {}) {
+            output.textContent = JSON.stringify({
+                source: authStore.source,
+                status: authStore.loadStatus,
+                isBusy: authStore.isBusy,
+                isLoggedIn: authStore.isLoggedIn,
+                user: authStore.currentUser,
+                ...extra,
+            }, null, 2)
+        }
+
+        function setBusy(busy) {
+            buttons.forEach(button => {
+                button.disabled = busy || !initialized
+            })
+        }
+
+        async function run(action) {
+            setBusy(true)
+
+            try {
+                await action()
+            } catch (error) {
+                show({
+                    error: error.message,
+                    code: error.code,
+                })
+            } finally {
+                password.value = ''
+                setBusy(false)
+            }
+        }
+
+        setBusy(true)
+
+        try {
+            await gameStore.initialize('database')
+            await authStore.initialize('database')
+
+            initialized = true
+            show({ initialized: true })
+        } catch (error) {
+            show({ error: error.message, code: error.code })
+        } finally {
+            setBusy(false)
+        }
+
+        form.addEventListener('submit', event => {
+            event.preventDefault()
+
+            run(async () => {
+                const success = await authStore.login(
+                    identifier.value,
+                    password.value
+                )
+
+                show({
+                    loginSucceeded: success,
+                    passed:
+                        success
+                        && authStore.isLoggedIn
+                        && authStore.source === 'database',
+                })
+            })
+        })
+
+        document.querySelector('#logout')
+            .addEventListener('click', () => run(async () => {
+                await authStore.logout()
+
+                show({
+                    passed:
+                        authStore.currentUser === null
+                        && !authStore.isLoggedIn,
+                })
+            }))
+
+        document.querySelector('#guard')
+            .addEventListener('click', () => run(async () => {
+                const before = JSON.stringify(authStore.currentUser)
+
+                let blocked = false
+                let message = ''
+
+                try {
+                    authStore.purchaseGames([1])
+                } catch (error) {
+                    blocked = true
+                    message = error.message
+                }
+
+                show({
+                    blocked,
+                    message,
+                    memberUnchanged:
+                        JSON.stringify(authStore.currentUser) === before,
+                    passed:
+                        blocked
+                        && JSON.stringify(authStore.currentUser) === before,
+                })
+            }))
+    </script>
+</body>
+</html>

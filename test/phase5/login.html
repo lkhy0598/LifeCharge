@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Database 登入測試</title>
+</head>
+
+<body>
+    <h1>Database 登入測試</h1>
+
+    <form id="login-form">
+        <p>
+            <label>
+                帳號或 Email
+                <input id="identifier" autocomplete="username" required>
+            </label>
+        </p>
+        <p>
+            <label>
+                密碼
+                <input id="password" type="password" autocomplete="current-password" required>
+            </label>
+        </p>
+        <button id="submit" type="submit">測試登入</button>
+    </form>
+
+    <p>
+        <button id="check" type="button">查詢目前會員</button>
+        <button id="logout" type="button">測試登出</button>
+        <button id="invalid-csrf" type="button">測試錯誤 CSRF</button>
+    </p>
+
+    <pre id="result">尚未測試</pre>
+
+    <script type="module">
+        const form = document.querySelector('#login-form')
+        const identifier = document.querySelector('#identifier')
+        const password = document.querySelector('#password')
+        const submit = document.querySelector('#submit')
+        const check = document.querySelector('#check')
+        const output = document.querySelector('#result')
+        const invalidCsrf = document.querySelector('#invalid-csrf')
+
+        async function request(path, options = {}) {
+            const response = await fetch(path, {
+                credentials: 'same-origin',
+                cache: 'no-store',
+                ...options,
+            })
+
+            const payload = await response.json()
+
+            if (!response.ok || payload.ok !== true) {
+                throw new Error(
+                    `${response.status} / ${payload.error?.code ?? 'UNKNOWN_ERROR'
+                    }：${payload.error?.message ?? '請求失敗'}`
+                )
+            }
+
+            return payload.data
+        }
+
+        function show(value) {
+            output.textContent = JSON.stringify(value, null, 2)
+        }
+
+        function setBusy(busy) {
+            submit.disabled = busy
+            check.disabled = busy
+        }
+        const logout = document.querySelector('#logout')
+
+        form.addEventListener('submit', async event => {
+            event.preventDefault()
+            function setBusy(busy) {
+                submit.disabled = busy
+                check.disabled = busy
+                logout.disabled = busy
+                invalidCsrf.disabled = busy
+            }
+            output.textContent = '正在驗證…'
+
+            try {
+                const before = await request('/api/csrf')
+
+                const user = await request('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': before.csrfToken,
+                    },
+                    body: JSON.stringify({
+                        identifier: identifier.value,
+                        password: password.value,
+                    }),
+                })
+
+                const after = await request('/api/csrf')
+                const restored = await request('/api/me')
+
+                show({
+                    loginSucceeded: true,
+                    csrfRotated:
+                        before.csrfToken !== after.csrfToken,
+                    sessionWorks: restored.id === user.id,
+                    user: restored,
+                })
+            } catch (error) {
+                show({ error: error.message })
+            } finally {
+                password.value = ''
+                setBusy(false)
+            }
+        })
+
+        check.addEventListener('click', async () => {
+            function setBusy(busy) {
+                submit.disabled = busy
+                check.disabled = busy
+                logout.disabled = busy
+                invalidCsrf.disabled = busy
+            }
+
+            try {
+                show({ user: await request('/api/me') })
+            } catch (error) {
+                show({ error: error.message })
+            } finally {
+                setBusy(false)
+            }
+        })
+
+        logout.addEventListener('click', async () => {
+            setBusy(true)
+            output.textContent = '正在登出…'
+
+            try {
+                const { csrfToken } = await request('/api/csrf')
+
+                const result = await request('/api/logout', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-Token': csrfToken,
+                    },
+                })
+
+                const response = await fetch('/api/me', {
+                    credentials: 'same-origin',
+                    cache: 'no-store',
+                })
+
+                const payload = await response.json()
+
+                const sessionCleared =
+                    response.status === 401
+                    && payload.ok === false
+                    && payload.error?.code === 'UNAUTHENTICATED'
+
+                show({
+                    loggedOut: result.loggedOut,
+                    sessionCleared,
+                    passed: result.loggedOut === true && sessionCleared,
+                })
+            } catch (error) {
+                show({ error: error.message })
+            } finally {
+                setBusy(false)
+            }
+        })
+
+        invalidCsrf.addEventListener('click', async () => {
+            setBusy(true)
+
+            try {
+                // 建立或取得 session，但刻意送出錯誤 token。
+                await request('/api/csrf')
+
+                const response = await fetch('/api/logout', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    cache: 'no-store',
+                    headers: {
+                        'X-CSRF-Token': '0'.repeat(64),
+                    },
+                })
+
+                const payload = await response.json()
+
+                show({
+                    httpStatus: response.status,
+                    code: payload.error?.code,
+                    passed:
+                        response.status === 403
+                        && payload.error?.code === 'CSRF_TOKEN_INVALID',
+                })
+            } catch (error) {
+                show({ error: error.message })
+            } finally {
+                setBusy(false)
+            }
+        })
+    </script>
+</body>
+
+</html>

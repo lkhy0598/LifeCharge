@@ -52,26 +52,8 @@ function handleMemberClick() {
     }
 }
 
-const avatarImages = import.meta.glob(
-    '/src/assets/images/usersDataWebp/*/*.webp',
-    {
-        eager: true,
-        import: 'default',
-        query: '?url'
-    }
-)
-
 const currentAvatar = computed(() => {
-    if (!authStore.currentUser) return null
-
-    const path = authStore.currentUser.avatar
-    const image = avatarImages[path]
-
-    if (!image) {
-        throw new Error(`找不到會員頭像：${path}`)
-    }
-
-    return image
+    return authStore.currentUser?.avatar ?? null
 })
 
 </script>

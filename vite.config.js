@@ -5,6 +5,9 @@ export default defineConfig({
   base: '/LifeCharge/',
   plugins: [vue()],
   server: {
+    watch: {
+      ignored: ['**/backend/**'],
+    },
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:8080',

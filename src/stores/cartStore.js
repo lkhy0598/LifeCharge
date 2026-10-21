@@ -5,14 +5,28 @@ import { useAuthStore } from './authStore'
 
 export const useCartStore = defineStore('cart', () => {
     const cart = ref([])
-    const CART_STORAGE_KEY = 'lifecharge-cart'
+    const source = ref('demo')
+
+    let initializationMode = null
+    let isRestoring = false
+
+    function storageKey() {
+        return source.value === 'database'
+            ? 'lifecharge-database-cart'
+            : 'lifecharge-cart'
+    }
 
     watch(
         cart,
         value => {
-            sessionStorage.setItem(CART_STORAGE_KEY, JSON.stringify(value))
+            if (isRestoring) return
+
+            sessionStorage.setItem(
+                storageKey(),
+                JSON.stringify(value)
+            )
         },
-        { deep: true }
+        { deep: true, flush: 'sync' }
     )
 
     const cartCount = computed(() => {
@@ -72,7 +86,7 @@ export const useCartStore = defineStore('cart', () => {
     }
 
     function restoreCart() {
-        const savedCart = sessionStorage.getItem(CART_STORAGE_KEY)
+        const savedCart = sessionStorage.getItem(storageKey())
         if (savedCart === null) return
 
         try {
@@ -100,8 +114,50 @@ export const useCartStore = defineStore('cart', () => {
             removePurchasedGames()
         } catch {
             cart.value = []
-            sessionStorage.removeItem(CART_STORAGE_KEY)
+            sessionStorage.removeItem(storageKey())
         }
+    }
+
+    function initialize(mode) {
+        if (mode !== 'demo' && mode !== 'database') {
+            throw new Error('購物車模式不正確。')
+        }
+
+        if (initializationMode !== null) {
+            if (initializationMode !== mode) {
+                throw new Error('同一次初始化不能切換購物車模式。')
+            }
+
+            return
+        }
+
+        if (
+            gameStore.source !== mode
+            || gameStore.loadStatus !== 'ready'
+            || authStore.source !== mode
+            || authStore.loadStatus !== 'ready'
+            || authStore.isBusy
+        ) {
+            throw new Error('請先完成相同模式的遊戲與會員初始化。')
+        }
+
+        isRestoring = true
+
+        try {
+            source.value = mode
+            cart.value = []
+            restoreCart()
+        } finally {
+            isRestoring = false
+        }
+
+        // 保存驗證、去重與排除已擁有遊戲後的清單。
+        sessionStorage.setItem(
+            storageKey(),
+            JSON.stringify(cart.value)
+        )
+
+        initializationMode = mode
     }
 
     return {
@@ -113,6 +169,8 @@ export const useCartStore = defineStore('cart', () => {
         removeFromCart,
         cartTotal,
         removePurchasedGames,
-        restoreCart
+        restoreCart,
+        source,
+        initialize
     }
 })

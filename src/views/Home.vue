@@ -76,35 +76,23 @@ const genres = computed(() => {
     )]
 })
 
-const bannerImages = import.meta.glob(
-    '../assets/images/gameDataWebp/*/*_banner.webp',
-    {
-        eager: true,
-        import: 'default',
-        query: '?url'
-    }
-)
+const bannerGameIds = [4, 13, 24]
 
 const banners = computed(() => {
     return bannerGameIds.map(id => {
-        const folder = `game${String(id).padStart(2, '0')}`
-        const path = `../assets/images/gameDataWebp/${folder}/${folder}_banner.webp`
-        const image = bannerImages[path]
-
-        if (!image) {
-            throw new Error(`找不到 Banner：${path}`)
-        }
-
         const game = gameStore.getGameById(id)
+
         if (!game) {
             throw new Error(`找不到 Banner 遊戲：${id}`)
         }
 
-        return { id, image, title: game.titleZh }
+        return {
+            id: game.id,
+            image: game.banner,
+            title: game.titleZh,
+        }
     })
 })
-
-const bannerGameIds = [4, 13, 24]
 
 let bannerTimer
 let isBannerHovered = false

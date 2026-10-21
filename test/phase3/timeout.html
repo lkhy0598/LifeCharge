@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>Phase 3 逾時測試</title>
+</head>
+<body>
+    <h1>健康檢查逾時測試</h1>
+    <pre id="result">模擬後端無回應，請等待約 3 秒…</pre>
+
+    <script type="module">
+        import { createPinia } from 'pinia'
+        import { useSystemStore } from '../../src/stores/systemStore.js'
+
+        const originalFetch = window.fetch
+        const system = useSystemStore(createPinia())
+        const startedAt = performance.now()
+
+        // 模擬沒有回應的請求，但仍支援 AbortController 中止。
+        window.fetch = (_url, options) => new Promise((resolve, reject) => {
+            const abort = () => reject(
+                new DOMException('Request aborted', 'AbortError')
+            )
+
+            if (options.signal.aborted) {
+                abort()
+            } else {
+                options.signal.addEventListener('abort', abort, { once: true })
+            }
+        })
+
+        try {
+            await system.initialize()
+
+            document.querySelector('#result').textContent =
+                JSON.stringify({
+                    mode: system.mode,
+                    status: system.status,
+                    demoReason: system.demoReason,
+                    elapsedMs: Math.round(performance.now() - startedAt),
+                    passed:
+                        system.mode === 'demo'
+                        && system.demoReason === 'TIMEOUT',
+                }, null, 2)
+        } finally {
+            window.fetch = originalFetch
+        }
+    </script>
+</body>
+</html>

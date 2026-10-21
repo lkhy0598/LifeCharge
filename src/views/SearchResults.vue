@@ -15,7 +15,7 @@
         <section class="mt-4 d-flex flex-column ga-2" v-if="filteredGames.length > 0">
             <v-card class="search-game-card d-flex ga-2 pa-4" variant="outlined" rounded="lg"
                 v-for="game in filteredGames" :key="game.id" @click="openGame(game.id)" :ripple="false">
-                <v-img :src="getGameCover(game.id)" :alt="`${game.titleZh}封面`" rounded="lg" :aspect-ratio="3 / 4" cover
+                <v-img :src="game.cover" :alt="`${game.titleZh}封面`" rounded="lg" :aspect-ratio="3 / 4" cover
                     class="search-game-cover">
                     <div class="cover-status">
                         <span v-if="authStore.purchasedGames.includes(game.id)" class="status-badge is-owned">
@@ -140,27 +140,6 @@ const filteredGames = computed(() => {
 
     return results
 })
-
-const coverImages = import.meta.glob(
-    '../assets/images/gameDataWebp/*/*_cover.webp',
-    {
-        eager: true,
-        import: 'default',
-        query: '?url'
-    }
-)
-
-function getGameCover(id) {
-    const folder = `game${String(id).padStart(2, '0')}`
-    const path = `../assets/images/gameDataWebp/${folder}/${folder}_cover.webp`
-    const image = coverImages[path]
-
-    if (!image) {
-        throw new Error(`找不到遊戲封面：${path}`)
-    }
-
-    return image
-}
 
 const router = useRouter()
 

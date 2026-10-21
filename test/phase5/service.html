@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>會員 Service 測試</title>
+</head>
+<body>
+    <h1>會員 Service 測試</h1>
+
+    <form id="form">
+        <p>
+            <label>
+                帳號或 Email
+                <input id="identifier" autocomplete="username" required>
+            </label>
+        </p>
+        <p>
+            <label>
+                密碼
+                <input id="password" type="password"
+                    autocomplete="current-password" required>
+            </label>
+        </p>
+
+        <button id="login" type="submit">測試登入</button>
+    </form>
+
+    <p>
+        <button id="restore" type="button">查詢目前會員</button>
+        <button id="logout" type="button">測試登出</button>
+    </p>
+
+    <pre id="result">尚未測試</pre>
+    <img id="avatar" width="96" height="96"
+        alt="會員頭像" hidden>
+
+    <script type="module">
+        import {
+            getDatabaseMember,
+            loginDatabaseMember,
+            logoutDatabaseMember,
+        } from '../../src/services/authService.js'
+
+        const form = document.querySelector('#form')
+        const identifier = document.querySelector('#identifier')
+        const password = document.querySelector('#password')
+        const buttons = document.querySelectorAll('button')
+        const output = document.querySelector('#result')
+        const avatar = document.querySelector('#avatar')
+
+        function show(value) {
+            output.textContent = JSON.stringify(value, null, 2)
+        }
+
+        function showMember(user) {
+            avatar.hidden = true
+
+            if (!user) return
+
+            avatar.onload = () => {
+                avatar.hidden = false
+            }
+
+            avatar.onerror = () => {
+                output.textContent += '\n頭像載入失敗'
+            }
+
+            avatar.src = user.avatar
+        }
+
+        async function run(action) {
+            buttons.forEach(button => button.disabled = true)
+            output.textContent = '正在測試…'
+
+            try {
+                await action()
+            } catch (error) {
+                show({
+                    code: error.code,
+                    status: error.status,
+                    message: error.message,
+                    fields: error.fields,
+                    retryAfter: error.retryAfter,
+                })
+            } finally {
+                password.value = ''
+                buttons.forEach(button => button.disabled = false)
+            }
+        }
+
+        form.addEventListener('submit', event => {
+            event.preventDefault()
+
+            run(async () => {
+                const user = await loginDatabaseMember(
+                    identifier.value,
+                    password.value
+                )
+
+                const restored = await getDatabaseMember()
+
+                show({
+                    loginSucceeded: true,
+                    sessionWorks: restored?.id === user.id,
+                    user: restored,
+                })
+
+                showMember(restored)
+            })
+        })
+
+        document.querySelector('#restore')
+            .addEventListener('click', () => run(async () => {
+                const user = await getDatabaseMember()
+
+                show({ user })
+                showMember(user)
+            }))
+
+        document.querySelector('#logout')
+            .addEventListener('click', () => run(async () => {
+                await logoutDatabaseMember()
+
+                const user = await getDatabaseMember()
+
+                show({
+                    loggedOut: true,
+                    user,
+                    passed: user === null,
+                })
+
+                showMember(user)
+            }))
+    </script>
+</body>
+</html>

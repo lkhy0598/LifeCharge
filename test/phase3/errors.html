@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>Phase 3 錯誤測試</title>
+</head>
+<body>
+    <h1>API 錯誤分類測試</h1>
+    <pre id="result">測試中…</pre>
+
+    <script type="module">
+        import { createPinia } from 'pinia'
+        import { useSystemStore } from '../../src/stores/systemStore.js'
+
+        const originalFetch = window.fetch
+        const results = []
+
+        try {
+            for (const httpStatus of [401, 403, 409]) {
+                // 只在這個測試頁模擬 API，不呼叫真正的後端。
+                window.fetch = async () => new Response(
+                    JSON.stringify({
+                        ok: false,
+                        error: {
+                            code: `TEST_${httpStatus}`,
+                            message: '模擬錯誤',
+                        },
+                    }),
+                    {
+                        status: httpStatus,
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                )
+
+                // 每個案例使用獨立的 Store。
+                const system = useSystemStore(createPinia())
+                let rejected = false
+
+                try {
+                    await system.initialize()
+                } catch {
+                    rejected = true
+                }
+
+                results.push({
+                    httpStatus,
+                    mode: system.mode,
+                    status: system.status,
+                    errorCode: system.initializationError?.code,
+                    passed:
+                        rejected
+                        && system.status === 'error'
+                        && system.mode === 'checking'
+                        && system.initializationError?.code
+                            === `TEST_${httpStatus}`,
+                })
+            }
+        } finally {
+            window.fetch = originalFetch
+        }
+
+        document.querySelector('#result').textContent =
+            JSON.stringify(results, null, 2)
+    </script>
+</body>
+</html>

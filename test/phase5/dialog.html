@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>會員視窗測試</title>
+</head>
+<body>
+    <div id="app">正在初始化…</div>
+
+    <script type="module">
+        import { createApp, h } from 'vue'
+        import { createPinia } from 'pinia'
+        import {
+            createRouter, createMemoryHistory,
+        } from 'vue-router'
+        import { createVuetify } from 'vuetify'
+        import {
+            VApp, VMain, VBtn, VDialog, VCard,
+            VCardTitle, VCardText, VSpacer,
+            VForm, VTextField, VAlert,
+        } from 'vuetify/components'
+
+        import 'vuetify/styles'
+        import '@mdi/font/css/materialdesignicons.css'
+        import '../../src/assets/styles/style.scss'
+
+        import LoginDialog from '../../src/components/LoginDialog.vue'
+        import { useGameStore } from '../../src/stores/gameStore.js'
+        import { useAuthStore } from '../../src/stores/authStore.js'
+        import { useCartStore } from '../../src/stores/cartStore.js'
+
+        const mode = new URLSearchParams(location.search)
+            .get('mode') === 'demo' ? 'demo' : 'database'
+
+        const otherCartKey = mode === 'database'
+            ? 'lifecharge-cart'
+            : 'lifecharge-database-cart'
+
+        const otherCartBefore = sessionStorage.getItem(otherCartKey)
+
+        const pinia = createPinia()
+        const gameStore = useGameStore(pinia)
+        const authStore = useAuthStore(pinia)
+        const cartStore = useCartStore(pinia)
+
+        const EmptyPage = { render: () => null }
+
+        const router = createRouter({
+            history: createMemoryHistory(),
+            routes: [
+                { path: '/', component: EmptyPage },
+                { path: '/member', component: EmptyPage },
+                { path: '/checkout', component: EmptyPage },
+            ],
+        })
+
+        const vuetify = createVuetify({
+            components: {
+                VApp, VMain, VBtn, VDialog, VCard,
+                VCardTitle, VCardText, VSpacer,
+                VForm, VTextField, VAlert,
+            },
+            theme: {
+                defaultTheme: 'light',
+                themes: {
+                    light: {
+                        colors: {
+                            primary: '#d94b39',
+                            'on-primary': '#ffffff',
+                        },
+                    },
+                },
+            },
+            icons: { defaultSet: 'mdi' },
+        })
+
+        try {
+            await gameStore.initialize(mode)
+            await authStore.initialize(mode)
+            cartStore.initialize(mode)
+
+            await router.push('/')
+            await router.isReady()
+
+            const app = createApp({
+                setup() {
+                    return () => h(VApp, null, {
+                        default: () => h(VMain, null, {
+                            default: () => [
+                                h('section', {
+                                    style: 'padding:24px',
+                                }, [
+                                    h('h1', '會員視窗測試'),
+                                    h('p', `目前模式：${mode}`),
+
+                                    h(VBtn, {
+                                        class: 'ma-2',
+                                        onClick: () => authStore.requestLogin(),
+                                    }, {
+                                        default: () => '開啟會員視窗',
+                                    }),
+
+                                    h(VBtn, {
+                                        class: 'ma-2',
+                                        onClick: () =>
+                                            authStore.requestLogin('/checkout'),
+                                    }, {
+                                        default: () => '測試接續結帳目的地',
+                                    }),
+
+                                    h('pre', JSON.stringify({
+                                        source: authStore.source,
+                                        status: authStore.loadStatus,
+                                        user: authStore.currentUser,
+                                        cartSource: cartStore.source,
+                                        cartCount: cartStore.cartCount,
+                                        destination: authStore.loginDestination,
+                                        currentRoute:
+                                            router.currentRoute.value.path,
+                                        otherCartUnchanged:
+                                            sessionStorage.getItem(otherCartKey)
+                                                === otherCartBefore,
+                                    }, null, 2)),
+                                ]),
+
+                                h(LoginDialog, {
+                                    modelValue: authStore.isLoginOpen,
+                                    'onUpdate:modelValue': value => {
+                                        authStore.isLoginOpen = value
+                                    },
+                                }),
+                            ],
+                        }),
+                    })
+                },
+            })
+
+            app.use(pinia)
+            app.use(router)
+            app.use(vuetify)
+            app.mount('#app')
+        } catch (error) {
+            document.querySelector('#app').textContent =
+                `初始化失敗：${error.message}`
+        }
+    </script>
+</body>
+</html>

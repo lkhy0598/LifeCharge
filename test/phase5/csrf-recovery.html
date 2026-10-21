@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CSRF 恢復測試</title>
+</head>
+<body>
+    <h1>CSRF 恢復測試</h1>
+    <button id="run">開始測試</button>
+    <pre id="result">尚未測試</pre>
+
+    <script type="module">
+        import { createPinia } from 'pinia'
+        import { useGameStore } from '../../src/stores/gameStore.js'
+        import { useAuthStore } from '../../src/stores/authStore.js'
+
+        const button = document.querySelector('#run')
+        const output = document.querySelector('#result')
+
+        button.addEventListener('click', async () => {
+            button.disabled = true
+            output.textContent = '正在測試…'
+
+            const originalFetch = window.fetch
+            const counts = {
+                login: 0,
+                me: 0,
+                csrf: 0,
+            }
+
+            try {
+                const pinia = createPinia()
+                const gameStore = useGameStore(pinia)
+                const authStore = useAuthStore(pinia)
+
+                await gameStore.initialize('database')
+                await authStore.initialize('database')
+
+                const previousId = authStore.currentUser?.id ?? null
+
+                // 只模擬登入的 403，其餘請求照常送到後端。
+                window.fetch = async (input, options) => {
+                    if (input === '/api/login') {
+                        counts.login++
+
+                        return new Response(JSON.stringify({
+                            ok: false,
+                            error: {
+                                code: 'CSRF_TOKEN_INVALID',
+                                message: '測試用 CSRF 失效。',
+                            },
+                        }), {
+                            status: 403,
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        })
+                    }
+
+                    if (input === '/api/me') counts.me++
+                    if (input === '/api/csrf') counts.csrf++
+
+                    return originalFetch.call(window, input, options)
+                }
+
+                let caughtError = null
+
+                try {
+                    await authStore.login(
+                        'csrf_recovery_test',
+                        'unused_test_password'
+                    )
+                } catch (error) {
+                    caughtError = error
+                }
+
+                const currentId = authStore.currentUser?.id ?? null
+
+                output.textContent = JSON.stringify({
+                    counts,
+                    code: caughtError?.code,
+                    message: caughtError?.message,
+                    source: authStore.source,
+                    status: authStore.loadStatus,
+                    isBusy: authStore.isBusy,
+                    isLoggedIn: authStore.isLoggedIn,
+                    identityUnchanged: currentId === previousId,
+                    passed:
+                        counts.login === 1
+                        && counts.me === 1
+                        && counts.csrf === 2
+                        && caughtError?.status === 403
+                        && caughtError?.code === 'CSRF_TOKEN_INVALID'
+                        && authStore.source === 'database'
+                        && authStore.loadStatus === 'ready'
+                        && !authStore.isBusy
+                        && currentId === previousId,
+                }, null, 2)
+            } catch (error) {
+                output.textContent = JSON.stringify({
+                    passed: false,
+                    code: error.code,
+                    message: error.message,
+                }, null, 2)
+            } finally {
+                window.fetch = originalFetch
+                button.disabled = false
+            }
+        })
+    </script>
+</body>
+</html>

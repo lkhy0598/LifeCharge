@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>會員限流測試</title>
+</head>
+<body>
+    <h1>會員限流測試</h1>
+    <p>不新增會員，但會用完目前來源 IP 的登入與註冊額度。</p>
+    <button id="run">開始測試</button>
+    <pre id="result">尚未測試</pre>
+
+    <script type="module">
+        const button = document.querySelector('#run')
+        const output = document.querySelector('#result')
+
+        async function testLimit(action, maxAttempts) {
+            const responses = []
+
+            for (let attempt = 1; attempt <= maxAttempts + 1; attempt++) {
+                const response = await fetch(`/api/${action}`, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    cache: 'no-store',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: '{}',
+                })
+
+                const payload = await response.json()
+                const code = payload.error?.code
+
+                responses.push({
+                    attempt,
+                    status: response.status,
+                    code,
+                })
+
+                if (response.status === 429) {
+                    const retryAfter = Number(
+                        response.headers.get('Retry-After')
+                    )
+
+                    return {
+                        action,
+                        responses,
+                        retryAfter,
+                        passed:
+                            code === 'RATE_LIMITED'
+                            && Number.isInteger(retryAfter)
+                            && retryAfter > 0,
+                    }
+                }
+
+                if (
+                    response.status !== 403
+                    || code !== 'CSRF_TOKEN_INVALID'
+                ) {
+                    throw new Error(
+                        `${action} 出現非預期回應：${response.status} / ${code}`
+                    )
+                }
+            }
+
+            return { action, responses, passed: false }
+        }
+
+        button.addEventListener('click', async () => {
+            button.disabled = true
+            output.textContent = '正在測試…'
+
+            try {
+                const login = await testLimit('login', 20)
+                const register = await testLimit('register', 5)
+
+                output.textContent = JSON.stringify({
+                    login,
+                    register,
+                    passed: login.passed && register.passed,
+                }, null, 2)
+            } catch (error) {
+                output.textContent = JSON.stringify({
+                    passed: false,
+                    error: error.message,
+                }, null, 2)
+            } finally {
+                button.disabled = false
+            }
+        })
+    </script>
+</body>
+</html>

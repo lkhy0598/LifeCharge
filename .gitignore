@@ -22,3 +22,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local environment settings
+.env
+.env.*
+!.env.example
+
+# Backend private settings
+/backend/config/database.local.php
+/backend/storage/

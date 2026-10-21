@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>Phase 4 Store 測試</title>
+</head>
+<body>
+    <h1>遊戲 Store 測試</h1>
+    <pre id="result">測試中…</pre>
+
+    <script type="module">
+        import { createPinia } from 'pinia'
+        import { useGameStore } from '../../src/stores/gameStore.js'
+
+        const output = document.querySelector('#result')
+
+        // 兩份獨立 Store，不影響正式網站的狀態。
+        const demo = useGameStore(createPinia())
+        const database = useGameStore(createPinia())
+
+        try {
+            const defaultDemoReady =
+                demo.source === 'demo'
+                && demo.games.length === 30
+
+            await Promise.all([
+                demo.initialize('demo'),
+                database.initialize('database'),
+            ])
+
+            function checkStore(store) {
+                const firstGame = store.getGameById(1)
+
+                if (!firstGame) {
+                    throw new Error('找不到第 1 款遊戲。')
+                }
+
+                return {
+                    source: store.source,
+                    status: store.loadStatus,
+                    count: store.games.length,
+                    stringIdWorks:
+                        store.getGameById('1')?.id === 1,
+                    unknownIdWorks:
+                        store.getGameById(999999) === undefined,
+                    chineseSearchWorks:
+                        store.searchGames(firstGame.titleZh)
+                            .some(game => game.id === 1),
+                    englishSearchWorks:
+                        store.searchGames(firstGame.title.toUpperCase())
+                            .some(game => game.id === 1),
+                    emptySearchCount:
+                        store.searchGames('').length,
+                    genreSearchWorks:
+                        store.getGamesByGenre(firstGame.genre[0])
+                            .some(game => game.id === 1),
+                    newCount: store.getNewGames().length,
+                    bestsellerCount: store.getBestsellers().length,
+                    featuredCount: store.getFeaturedGames().length,
+                }
+            }
+
+            const demoResult = checkStore(demo)
+            const databaseResult = checkStore(database)
+
+            function passed(result) {
+                return result.status === 'ready'
+                    && result.count === 30
+                    && result.stringIdWorks
+                    && result.unknownIdWorks
+                    && result.chineseSearchWorks
+                    && result.englishSearchWorks
+                    && result.emptySearchCount === 30
+                    && result.genreSearchWorks
+                    && result.newCount === 8
+                    && result.bestsellerCount === 14
+                    && result.featuredCount === 18
+            }
+
+            output.textContent = JSON.stringify({
+                defaultDemoReady,
+                demo: demoResult,
+                database: databaseResult,
+                passed:
+                    defaultDemoReady
+                    && demo.source === 'demo'
+                    && database.source === 'database'
+                    && passed(demoResult)
+                    && passed(databaseResult),
+            }, null, 2)
+        } catch (error) {
+            output.textContent = JSON.stringify({
+                passed: false,
+                code: error.code ?? 'UNEXPECTED_ERROR',
+                message: error.message,
+            }, null, 2)
+        }
+    </script>
+</body>
+</html>

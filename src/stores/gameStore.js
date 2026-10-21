@@ -1,13 +1,65 @@
 
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import gamesData from '../data/games.json'
+import { loadDemoGames, loadGames } from '../services/gameService'
 
 export const useGameStore = defineStore('game', () => {
-    const games = ref(gamesData)
+    // 保留 V1 同步初始化，正式入口目前仍使用 Demo。
+    const games = ref(loadDemoGames())
+    const source = ref('demo')
+    const loadStatus = ref('ready')
+    const loadError = ref(null)
+
+    let initializationPromise = null
+    let initializationMode = null
 
     function getGameById(id) {
         return games.value.find(game => game.id === Number(id))
+    }
+
+    function initialize(mode) {
+        if (mode !== 'demo' && mode !== 'database') {
+            return Promise.reject(new Error('遊戲資料模式不正確。'))
+        }
+
+        if (initializationPromise) {
+            if (mode !== initializationMode) {
+                return Promise.reject(
+                    new Error('同一次初始化不能切換遊戲資料模式。')
+                )
+            }
+
+            return initializationPromise
+        }
+
+        initializationMode = mode
+        loadStatus.value = 'loading'
+        loadError.value = null
+
+        initializationPromise = Promise.resolve().then(async () => {
+            try {
+                const loadedGames = await loadGames(mode)
+
+                games.value = loadedGames
+                source.value = mode
+                loadStatus.value = 'ready'
+
+                return games.value
+            } catch (error) {
+                // 不用原本的 Demo 資料冒充載入成功。
+                games.value = []
+                source.value = null
+                loadStatus.value = 'error'
+                loadError.value = {
+                    code: error.code ?? 'GAMES_LOAD_FAILED',
+                    message: error.message ?? '遊戲資料載入失敗。',
+                }
+
+                throw error
+            }
+        })
+
+        return initializationPromise
     }
 
     function searchGames(keyword) {
@@ -61,6 +113,10 @@ export const useGameStore = defineStore('game', () => {
         getGamesByGenre,
         getNewGames,
         getBestsellers,
-        getFeaturedGames
+        getFeaturedGames,
+        source,
+        loadStatus,
+        loadError,
+        initialize
     }
 })

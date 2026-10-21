@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>報價測試</title>
+</head>
+<body>
+    <h1>報價測試</h1>
+    <p>只取得報價，不會購買或建立訂單。</p>
+
+    <form id="form">
+        <label>
+            遊戲編號，以逗號分隔
+            <input id="ids" placeholder="例如：1,2" required>
+        </label>
+        <button id="submit" type="submit">取得報價</button>
+    </form>
+
+    <pre id="result">尚未測試</pre>
+
+    <script type="module">
+        import {
+            getApiJson,
+            postApiJson,
+        } from '../../src/services/apiClient.js'
+
+        const form = document.querySelector('#form')
+        const ids = document.querySelector('#ids')
+        const submit = document.querySelector('#submit')
+        const output = document.querySelector('#result')
+
+        form.addEventListener('submit', async event => {
+            event.preventDefault()
+            submit.disabled = true
+            output.textContent = '正在取得報價…'
+
+            try {
+                const gameIds = ids.value.split(',')
+                    .map(value => Number(value.trim()))
+
+                const { csrfToken } = await getApiJson('/api/csrf')
+
+                const quote = await postApiJson(
+                    '/api/checkout/quote',
+                    { gameIds },
+                    { csrfToken }
+                )
+
+                output.textContent = JSON.stringify(quote, null, 2)
+            } catch (error) {
+                output.textContent = JSON.stringify({
+                    code: error.code,
+                    status: error.status,
+                    message: error.message,
+                }, null, 2)
+            } finally {
+                submit.disabled = false
+            }
+        })
+    </script>
+</body>
+</html>

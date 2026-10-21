@@ -14,7 +14,8 @@
                         <p>@{{ authStore.currentUser.username }}</p>
                         <p>{{ authStore.currentUser.email }}</p>
                     </v-card-text>
-                    <v-btn variant="outlined" @click="handleLogout" class="logout-btn">登出</v-btn>
+                    <v-btn variant="outlined" @click="handleLogout" class="logout-btn" :loading="isLoggingOut"
+                        :disabled="isLoggingOut">登出</v-btn>
                 </div>
             </v-card>
         </section>
@@ -40,7 +41,7 @@
 <script setup>
 import GameCard from '../components/GameCard.vue'
 import { useAuthStore } from '../stores/authStore'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useGameStore } from '../stores/gameStore'
 import { useRouter } from 'vue-router'
 import { useNotificationStore } from '../stores/notificationStore'
@@ -48,27 +49,10 @@ import { useNotificationStore } from '../stores/notificationStore'
 const notificationStore = useNotificationStore()
 
 const authStore = useAuthStore()
-
-const avatarImages = import.meta.glob(
-    '/src/assets/images/usersDataWebp/*/*.webp',
-    {
-        eager: true,
-        import: 'default',
-        query: '?url'
-    }
-)
+const isLoggingOut = ref(false)
 
 const currentAvatar = computed(() => {
-    if (!authStore.currentUser) return null
-
-    const path = authStore.currentUser.avatar
-    const image = avatarImages[path]
-
-    if (!image) {
-        throw new Error(`找不到會員頭像：${path}`)
-    }
-
-    return image
+    return authStore.currentUser?.avatar ?? null
 })
 
 const gameStore = useGameStore()
@@ -81,12 +65,25 @@ const libraryGames = computed(() => {
 
 const router = useRouter()
 
-function handleLogout() {
-    authStore.logout()
-    notificationStore.showMessage('登出成功')
-    router.push('/')
-}
+async function handleLogout() {
+    if (isLoggingOut.value) return
 
+    isLoggingOut.value = true
+
+    try {
+        await authStore.logout()
+    } catch (error) {
+        notificationStore.showMessage(
+            error.message || '目前無法登出，請稍後再試。'
+        )
+        return
+    } finally {
+        isLoggingOut.value = false
+    }
+
+    notificationStore.showMessage('登出成功')
+    await router.push('/')
+}
 </script>
 
 <style scoped lang="scss">

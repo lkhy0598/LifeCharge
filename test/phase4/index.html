@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>Phase 4 遊戲資料測試</title>
+</head>
+<body>
+    <h1>遊戲資料來源測試</h1>
+    <pre id="result">正在載入兩種資料…</pre>
+    <div id="images"></div>
+
+    <script type="module">
+        import { loadGames } from '../../src/services/gameService.js'
+
+        const output = document.querySelector('#result')
+        const images = document.querySelector('#images')
+
+        try {
+            const [demo, database] = await Promise.all([
+                loadGames('demo'),
+                loadGames('database'),
+            ])
+
+            // 圖片來源不同，不比較網址；比較其餘遊戲內容。
+            const fields = [
+                'id', 'title', 'titleZh', 'price', 'rating',
+                'releaseDate', 'developer', 'publisher',
+                'description', 'detailDescription',
+                'genre', 'tags', 'status',
+            ]
+
+            const databaseById = new Map(
+                database.map(game => [game.id, game])
+            )
+
+            const mismatchedIds = demo
+                .filter(game => {
+                    const other = databaseById.get(game.id)
+
+                    return !other || fields.some(field =>
+                        JSON.stringify(game[field])
+                            !== JSON.stringify(other[field])
+                    )
+                })
+                .map(game => game.id)
+
+            const screenshotsValid = [...demo, ...database]
+                .every(game => game.screenshots.length === 5)
+
+            output.textContent = JSON.stringify({
+                demoCount: demo.length,
+                databaseCount: database.length,
+                mismatchedIds,
+                screenshotsValid,
+                passed:
+                    demo.length === 30
+                    && database.length === 30
+                    && mismatchedIds.length === 0
+                    && screenshotsValid,
+            }, null, 2)
+
+            // 各顯示第一款遊戲封面，確認圖片實際能載入。
+            for (const [name, games] of [
+                ['Demo', demo],
+                ['Database', database],
+            ]) {
+                const section = document.createElement('section')
+                const title = document.createElement('h2')
+                const image = document.createElement('img')
+                const address = document.createElement('p')
+                const state = document.createElement('p')
+
+                title.textContent = `${name}：${games[0].titleZh}`
+                address.textContent = games[0].cover
+
+                image.alt = `${name} 封面`
+                image.width = 150
+
+                image.addEventListener('load', () => {
+                    state.textContent = '圖片載入成功'
+                })
+
+                image.addEventListener('error', () => {
+                    state.textContent = '圖片載入失敗'
+                })
+
+                image.src = games[0].cover
+
+                section.append(title, image, address, state)
+                images.append(section)
+            }
+        } catch (error) {
+            output.textContent = JSON.stringify({
+                passed: false,
+                code: error.code ?? 'UNEXPECTED_ERROR',
+                message: error.message,
+            }, null, 2)
+        }
+    </script>
+</body>
+</html>

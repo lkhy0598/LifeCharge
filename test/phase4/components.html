@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Database 元件圖片測試</title>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script type="module">
+        import { createApp, h, ref } from 'vue'
+        import { createPinia } from 'pinia'
+        import { createRouter, createMemoryHistory } from 'vue-router'
+        import { createVuetify } from 'vuetify'
+        import {
+            VApp, VCard, VCardText, VImg, VSpacer,
+            VIcon, VBtn,
+        } from 'vuetify/components'
+
+        import 'vuetify/styles'
+        import '@mdi/font/css/materialdesignicons.css'
+        import '../../src/assets/styles/style.scss'
+
+        import GameCard from '../../src/components/GameCard.vue'
+        import { useGameStore } from '../../src/stores/gameStore.js'
+
+        const pinia = createPinia()
+        const gameStore = useGameStore(pinia)
+        const errorMessage = ref('')
+
+        try {
+            await gameStore.initialize('database')
+        } catch (error) {
+            errorMessage.value = error.message
+        }
+
+        const router = createRouter({
+            history: createMemoryHistory(),
+            routes: [{
+                path: '/',
+                component: { render: () => null },
+            }],
+        })
+
+        const vuetify = createVuetify({
+            components: {
+                VApp, VCard, VCardText, VImg,
+                VSpacer, VIcon, VBtn,
+            },
+        })
+
+        const app = createApp({
+            setup() {
+                return () => {
+                    if (errorMessage.value) {
+                        return h('pre', errorMessage.value)
+                    }
+
+                    const first = gameStore.games[0]
+
+                    return h(VApp, null, {
+                        default: () => h('main', {
+                            style: 'padding:24px;max-width:1200px;margin:auto',
+                        }, [
+                            h('h1', 'Database 元件圖片測試'),
+                            h('p', `來源：${gameStore.source}，共 ${gameStore.games.length} 款`),
+                            h('p', first.cover),
+
+                            h('h2', '實際 GameCard：30 款封面'),
+                            h('div', {
+                                inert: true,
+                                style: `
+                                    display:grid;
+                                    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+                                    gap:16px;
+                                    margin:20px 0;
+                                `,
+                            }, gameStore.games.map(game =>
+                                h(GameCard, {
+                                    key: game.id,
+                                    game,
+                                    mode: 'library',
+                                })
+                            )),
+
+                            h('h2', '第一款遊戲：橫幅'),
+                            h(VImg, {
+                                src: first.banner,
+                                alt: `${first.titleZh}橫幅`,
+                                aspectRatio: 1920 / 700,
+                            }),
+
+                            h('h2', '第一款遊戲：五張截圖'),
+                            ...first.screenshots.map((src, index) =>
+                                h(VImg, {
+                                    key: src,
+                                    src,
+                                    alt: `截圖 ${index + 1}`,
+                                    aspectRatio: 16 / 9,
+                                    style: 'margin-top:16px',
+                                })
+                            ),
+                        ]),
+                    })
+                }
+            },
+        })
+
+        app.use(pinia)
+        app.use(router)
+        app.use(vuetify)
+        app.mount('#app')
+    </script>
+</body>
+</html>

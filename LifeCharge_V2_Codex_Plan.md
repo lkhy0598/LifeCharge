@@ -161,6 +161,7 @@ LifeCharge/
 - 驗收：V1 主要功能無回歸。
 
 ### Phase 8：GitHub 與文件
+- 已新增 docs/V2程式導讀.md，整理四層分工、PHP 與前端函式對照、登入／購買實例、錯誤恢復、暫存與修改位置；README 已連結並更新目前進度。僅整理文件，未因此重構程式。
 - 提供 `.gitignore`、安全範例設定、schema/seed、README 啟動教學。
 - GitHub Repository 包含前端、後端及 SQL 原始碼；GitHub Pages 只部署靜態前端 Demo。
 - README 說明兩種模式、所需環境、啟動順序、展示功能、限制與測試步驟。

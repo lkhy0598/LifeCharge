@@ -118,6 +118,13 @@
 </template>
 
 <script setup>
+// 這是遊戲詳細頁。例如網址最後是 /game/4，就找編號 4 的遊戲，顯示名稱、圖片及是否已購買。
+// 遊戲、會員與購物車資料都向全站共用資料取得。切到另一款遊戲時，截圖要回到第一張並關閉放大畫面。
+// 畫面打開時會執行這段 <script setup>。上面 <template> 寫畫面長相，這裡寫要顯示的資料與按鈕按下後的動作。
+// import 讓這個畫面能使用其他檔案的功能；Store 是全站共用的資料，例如換頁後仍是同一份購物車。
+// ref 用來保存會改變的值，例如視窗是否打開。這裡改值要寫「變數.value」，Vue 才能連帶更新畫面。
+// computed 是依現有資料算出畫面要顯示的結果；watch 是等某項資料變了，再執行指定動作。下方會配實際用途說明。
+
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useGameStore } from '../stores/gameStore'
@@ -128,47 +135,65 @@ import { useAuthStore } from '../stores/authStore'
 const cartStore = useCartStore()
 const authStore = useAuthStore()
 
+// 決定按鈕是否顯示「已擁有」：先看目前是哪款遊戲，再看會員的已購買清單有沒有它。會員或遊戲改變時會重新計算。
 const isPurchased = computed(() => {
+    // 先問 game.value 有沒有資料。有就執行 ? 後面的購買檢查，沒有就用 : 後面的 false，不能對不存在的遊戲讀 id。
     return game.value
         ? authStore.purchasedGames.includes(game.value.id)
         : false
 })
 
+// 決定按鈕是否顯示「已加入」：問購物車有沒有這款遊戲。放進購物車與買成功是兩件事，所以和上面的已擁有分開檢查。
 const isInCart = computed(() => {
+    // 一樣先確認找到遊戲，才把它的編號交給 isInCart() 查購物車；找不到則回 false，表示不顯示已加入。
     return game.value
         ? cartStore.isInCart(game.value.id)
         : false
 })
 
+// selectedShot 記錄「現在選第幾張截圖」。程式從 0 開始數，所以 0 是第一張、1 是第二張；這種位置編號叫索引。
 const selectedShot = ref(0)
+// 點截圖後會把這個開關改 true，顯示放大的圖片；false 表示放大視窗關閉。
 const isLightboxOpen = ref(false)
 
+// 按放大截圖的左／右箭頭時執行這個函式。direction 是方向：1 看下一張，-1 看上一張。
+// 要讓圖片可以循環：最後一張按下一張回第一張，第一張按上一張回最後一張。下面的算式就是處理這件事。
 function changeShot(direction) {
+    // count 取得這款遊戲共有幾張截圖。若是 0，return 就停止這次切圖，不繼續計算不存在的圖片位置。
     const count = screenshots.value.length
     if (count === 0) return
 
+    // % 是除法後取餘數。以五張圖為例：最後一張的位置 4，往後是 (4+1+5)%5 = 0，回第一張。
+    // 第一張往前則是 (0-1+5)%5 = 4，回最後一張；先加 count 是為了讓往前的計算不變成負數。
     selectedShot.value =
         (selectedShot.value + direction + count) % count
 }
 
+// route 保存目前網址資訊；下面透過 route.params.id 取得 /game/ 後面的編號，再去遊戲清單找資料。
 const route = useRoute()
 const gameStore = useGameStore()
 
 const game = computed(() => {
+    // 例如 /game/4 的 id 是文字「4」。getGameById() 會先轉成數字再查，找到完整遊戲交給 game；沒找到就沒有結果。
     return gameStore.getGameById(route.params.id)
 })
 
+// 取目前遊戲的橫幅網址。?. 表示「有遊戲才讀 banner」；?? null 表示沒讀到就用空值，避免輸入不存在的編號時報錯。
 const gamebanner = computed(() => {
     return game.value?.banner ?? null
 })
 
+// 取目前遊戲的截圖清單；找不到遊戲就用空清單 []，畫面就沒有截圖可顯示。
 const screenshots = computed(() => {
     return game.value?.screenshots ?? []
 })
 
+// 使用者可能從一款遊戲切到另一款，但仍使用同一支詳細頁程式。watch 發現網址編號改變時，執行下面的重設動作。
 watch(
+    // () => route.params.id 告訴 watch「只注意遊戲編號」。例如購物車數量改變，就不會因此把正在看的截圖切回第一張。
     () => route.params.id,
     () => {
+        // 換遊戲後 selectedShot 設為 0，顯示第一張；isLightboxOpen 設 false，關掉上一款留下的放大截圖視窗。
         selectedShot.value = 0
         isLightboxOpen.value = false
     }

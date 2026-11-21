@@ -1,9 +1,18 @@
 <script setup>
+// 本檔是專案建立時的範例元件，不參與目前路由中的商城功能。
+// 保留原本程式，只註解範例內容；圖片 import 讓 Vite 管理檔案網址。
+// 畫面打開時會執行這段 <script setup>。上面 <template> 寫畫面長相，這裡寫要顯示的資料與按鈕按下後的動作。
+// import 讓這個畫面能使用其他檔案的功能；Store 是全站共用的資料，例如換頁後仍是同一份購物車。
+// ref 用來保存會改變的值，例如視窗是否打開。這裡改值要寫「變數.value」，Vue 才能連帶更新畫面。
+
 import { ref } from 'vue'
+// 這些是建立專案時的示範圖片，Vite 會轉成可用 src 網址；目前不屬商城路由或後端媒體。
 import heroImg from '../assets/hero.png'
 import viteLogo from '../assets/vite.svg'
 import vueLogo from '../assets/vue.svg'
 
+// 範例按鈕的計數，初值 0；template 點擊時加一，ref 讓數字立即更新。
+// template 的 count++ 每按一次加一；ref 保持畫面更新，沒有寫 sessionStorage 或任何資料庫。
 const count = ref(0)
 </script>
 

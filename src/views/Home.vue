@@ -16,6 +16,16 @@
             </div>
             <v-divider color="var(--color-muted)" opacity="0.3" />
         </section>
+        <section v-if="systemStore.isDemo" class="mt-10">
+            <h2>最新消息</h2>
+            <RouterLink to="/news/demo-account" class="news-link mt-3">
+                <div>
+                    <h3>生活充電站 Demo 版體驗帳號</h3>
+                    <p>想體驗購買遊戲的流程嗎？使用 Demo 帳號登入，即可探索會員與購物功能。</p>
+                </div>
+                <span>查看詳細內容</span>
+            </RouterLink>
+        </section>
         <section class="mt-10">
             <header class="d-flex justify-space-between align-end">
                 <h2>探索遊戲</h2>
@@ -56,6 +66,7 @@ import GameCard from '../components/GameCard.vue'
 import { useGameStore } from '../stores/gameStore'
 import { genreLabels } from '../utils/gameLabels'
 import { useDisplay } from 'vuetify'
+import { useSystemStore } from '../stores/systemStore.js'
 
 const { xs } = useDisplay()
 
@@ -63,6 +74,7 @@ const bannerIndex = ref(0)
 const currentTab = ref('new')
 
 const gameStore = useGameStore()
+const systemStore = useSystemStore()
 
 const displayedGames = computed(() => {
     return gameStore.games.filter(game => {
@@ -133,6 +145,37 @@ onBeforeUnmount(stopBannerTimer)
 
 <style scoped lang="scss">
 @use '../assets/styles/breakpoints' as bp;
+
+.news-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    padding: 24px;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    color: var(--color-text);
+    text-decoration: none;
+
+    p {
+        margin-top: 8px;
+        color: var(--color-text);
+    }
+
+    span {
+        flex-shrink: 0;
+        color: var(--color-primary);
+    }
+
+    &:hover {
+        border-color: var(--color-primary);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 3px
+    }
+}
 
 .view-all-link {
     display: inline-flex;
@@ -258,6 +301,11 @@ onBeforeUnmount(stopBannerTimer)
 }
 
 @include bp.mobile {
+    .news-link {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
 
     .game-tabs {
         :deep(.v-tab) {

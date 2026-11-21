@@ -35,7 +35,8 @@ const items = computed(() => {
         SearchResults: '搜尋結果',
         GameDetail: '遊戲詳細頁',
         Member: '會員中心',
-        Checkout: '結帳'
+        Checkout: '結帳',
+        DemoAccountNews:'最新消息'
     }
 
     let currentTitle = pageTitles[route.name]

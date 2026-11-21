@@ -1,10 +1,14 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { useAuthStore } from '../stores/authStore'
+// 箭頭函式被路由需要時才執行 import，稱為延遲載入；不是現在立即把所有頁面都建立。
+import { useSystemStore } from '../stores/systemStore.js'
+
 const Home = () => import('../views/Home.vue')
 const SearchResults = () => import('../views/SearchResults.vue')
 const Member = () => import('../views/Member.vue')
 const GameDetail = () => import('../views/GameDetail.vue')
 const Checkout = () => import('../views/Checkout.vue')
+const DemoAccountNews = () => import('../views/DemoAccountNews.vue')
 
 const routes = [
     {
@@ -33,6 +37,12 @@ const routes = [
         name: 'Checkout',
         component: Checkout,
         meta: { requiresAuth: true }
+    },
+    {
+        path: '/news/demo-account',
+        name: 'DemoAccountNews',
+        component: DemoAccountNews,
+        meta: { demoOnly: true }
     }
 ]
 
@@ -50,6 +60,11 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
     const authStore = useAuthStore()
+    const systemStore = useSystemStore()
+
+    if (to.meta.demoOnly && !systemStore.isDemo) {
+        return { name: 'Home', replace: true }
+    }
 
     if (to.meta.requiresAuth && !authStore.isLoggedIn) {
         authStore.requestLogin(to.fullPath)

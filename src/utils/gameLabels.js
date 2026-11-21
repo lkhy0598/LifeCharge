@@ -1,4 +1,10 @@
+// 本檔把資料中的英文分類代碼對照成畫面上的中文名稱，沒有網路或資料庫操作。
+// 例如 genreLabels['RPG'] 會取得「角色扮演」。左邊是資料代碼，右邊是顯示文字。
+// export const 讓其他檔案引用對照物件；改中文顯示時優先改這裡，不必更換資料庫代碼。
+
+// 遊戲類型，例如角色扮演、動作；同一款可有多種類型。
 export const genreLabels = {
+    // 示例：資料存 RPG，畫面用 genreLabels[game.genre中的代碼] 取「角色扮演」；不是改資料庫內容。
     RPG: '角色扮演',
     Roguelike: '類 Rogue',
     Action: '動作',
@@ -24,14 +30,18 @@ export const genreLabels = {
     Rhythm: '音樂節奏',
 }
 
+// 商城展示標籤，不是訂單狀態；new／bestseller／featured 對應首頁分組。
 export const statusLabels = {
+    // 商品展示狀態可同時有多個，例如新品也能是精選；與訂單 completed 狀態不是同一組代碼。
     new: '新品上市',
     bestseller: '暢銷遊戲',
     featured: '精選遊戲'
 }
 
+// 更細的玩法與特色標籤。含空白或連字號的鍵用引號包住，才能作為合法名稱。
 export const tagLabels = {
     Atmospheric: '沉浸氛圍',
+    // 鍵含空白必須加引號；其他標籤同樣是固定對照，不需要逐項查詢 API。
     'Base Building': '基地建造',
     'Boss Battles': '頭目戰',
     'Character Customization': '角色自訂',
